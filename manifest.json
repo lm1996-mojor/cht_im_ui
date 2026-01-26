@@ -1,0 +1,239 @@
+{
+    "name" : "微聊",
+    "appid" : "__UNI__B90E958",
+    "description" : "考拉Team微聊",
+    "versionName" : "1.2.2",
+    "versionCode" : 122,
+    "developer" : {
+        "name" : "zmm2113@qq.com",
+        "email" : "zmm2113@qq.com"
+    },
+    "transformPx" : false,
+    "app-plus" : {
+        "compatible" : {
+            "ignoreVersion" : true //是否忽略版本兼容检查提示
+        },
+        /* 5+App特有相关 */
+        "permissions" : {
+            "File" : {
+                "description" : "文件系统"
+            }
+        },
+        "usingComponents" : true,
+        "nvueCompiler" : "uni-app",
+        "splashscreen" : {
+            "alwaysShowBeforeRender" : false,
+            "waiting" : false,
+            "autoclose" : false,
+            "delay" : 0
+        },
+        "modules" : {
+            "Geolocation" : {},
+            "Maps" : {},
+            "Speech" : {},
+            "VideoPlayer" : {},
+            "iBeacon" : {},
+            "Barcode" : {},
+            "Camera" : {}
+        },
+        /* 模块配置 */
+        "distribute" : {
+            /* 应用发布信息 */
+            "android" : {
+                /* android打包配置 */
+                "permissions" : [
+                    "<uses-permission android:name=\"android.permission.ACCESS_COARSE_LOCATION\"/>",
+                    "<uses-permission android:name=\"android.permission.ACCESS_FINE_LOCATION\"/>",
+                    "<uses-permission android:name=\"android.permission.ACCESS_NETWORK_STATE\"/>",
+                    "<uses-permission android:name=\"android.permission.ACCESS_WIFI_STATE\"/>",
+                    "<uses-permission android:name=\"android.permission.BLUETOOTH\"/>",
+                    "<uses-permission android:name=\"android.permission.BLUETOOTH_ADMIN\"/>",
+                    "<uses-permission android:name=\"android.permission.CHANGE_NETWORK_STATE\"/>",
+                    "<uses-permission android:name=\"android.permission.CHANGE_WIFI_STATE\"/>",
+                    "<uses-permission android:name=\"android.permission.GET_ACCOUNTS\"/>",
+                    "<uses-permission android:name=\"android.permission.INTERNET\"/>",
+                    "<uses-permission android:name=\"android.permission.MOUNT_UNMOUNT_FILESYSTEMS\"/>",
+                    "<uses-permission android:name=\"android.permission.READ_LOGS\"/>",
+                    "<uses-permission android:name=\"android.permission.READ_PHONE_STATE\"/>",
+                    "<uses-permission android:name=\"android.permission.REQUEST_INSTALL_PACKAGES\"/>",
+                    "<uses-permission android:name=\"android.permission.VIBRATE\"/>",
+                    "<uses-permission android:name=\"android.permission.WAKE_LOCK\"/>",
+                    "<uses-permission android:name=\"android.permission.WRITE_EXTERNAL_STORAGE\"/>",
+                    "<uses-permission android:name=\"android.permission.WRITE_SETTINGS\"/>"
+                ],
+                "minSdkVersion" : 21,
+                "usesCleartextTraffic" : true, // 允许安卓明文http请求（核心配置）
+                "permissionExternalStorage" : "none"
+            },
+            "ios" : {
+                "dSYMs" : false
+            },
+            /* ios打包配置 */
+            "sdkConfigs" : {
+                "geolocation" : {
+                    "system" : {
+                        "__platform__" : [ "ios", "android" ]
+                    },
+                    "amap" : {
+                        "__platform__" : [ "ios", "android" ],
+                        "appkey_ios" : "81cc6c72aeb6a1946510cc1e9f87ee80",
+                        "appkey_android" : "81cc6c72aeb6a1946510cc1e9f87ee80"
+                    }
+                },
+                "maps" : {
+                    "amap" : {
+                        "appkey_ios" : "81cc6c72aeb6a1946510cc1e9f87ee80",
+                        "appkey_android" : "81cc6c72aeb6a1946510cc1e9f87ee80"
+                    }
+                },
+                "speech" : {
+                    "ifly" : {}
+                },
+                "ad" : {},
+                "push" : {
+                    "unipush" : {
+                        "version" : "2",
+                        "offline" : false
+                    }
+                }
+            },
+            "icons" : {
+                "android" : {
+                    "hdpi" : "",
+                    "xhdpi" : "",
+                    "xxhdpi" : "",
+                    "xxxhdpi" : ""
+                },
+                "ios" : {
+                    "appstore" : "",
+                    "ipad" : {
+                        "app" : "",
+                        "app@2x" : "",
+                        "notification" : "",
+                        "notification@2x" : "",
+                        "proapp@2x" : "",
+                        "settings" : "",
+                        "settings@2x" : "",
+                        "spotlight" : "",
+                        "spotlight@2x" : ""
+                    },
+                    "iphone" : {
+                        "app@2x" : "",
+                        "app@3x" : "",
+                        "notification@2x" : "",
+                        "notification@3x" : "",
+                        "settings@2x" : "",
+                        "settings@3x" : "",
+                        "spotlight@2x" : "",
+                        "spotlight@3x" : ""
+                    }
+                }
+            },
+            "splashscreen" : {
+                "androidStyle" : "default",
+                "android" : {
+                    "hdpi" : "",
+                    "xhdpi" : "",
+                    "xxhdpi" : ""
+                },
+                "useOriginalMsgbox" : true
+            }
+        },
+        "uniStatistics" : {
+            "enable" : true
+        },
+        "nativePlugins" : {
+            "TUICallingUniPlugin-TUICallingModule" : {
+                "__plugin_info__" : {
+                    "name" : "TUICallingUniPlugin-TUICallingModule",
+                    "description" : "腾讯云音视频插件",
+                    "platforms" : "Android,iOS",
+                    "url" : "",
+                    "android_package_name" : "",
+                    "ios_bundle_id" : "",
+                    "isCloud" : false,
+                    "bought" : -1,
+                    "pid" : "",
+                    "parameters" : {}
+                }
+            }
+        }
+    },
+    /* SDK配置 */
+    "quickapp" : {},
+    /* 快应用特有相关 */
+    "mp-weixin" : {
+        /* 小程序特有相关 */
+        "appid" : "",
+        "setting" : {
+            "urlCheck" : false
+        },
+        "usingComponents" : true,
+        "uniStatistics" : {
+            "enable" : true
+        }
+    },
+    "vueVersion" : "3",
+    "uniStatistics" : {
+        "enable" : true,
+        "version" : "1"
+    },
+    "h5" : {
+        "devServer" : {
+            "port" : "5173",
+            "disableHostCheck" : true, // 关闭主机名检查，避免localhost/IP访问限制
+            "host" : "0.0.0.0",
+            "proxy" : {
+                "/chat_im" : {
+                    "target" : "http://129.204.4.150",
+                    "changeOrigin" : true, //是否跨域
+                    "secure" : false, // 设置支持https协议的代理
+                    "pathRewrite" : {}
+                }
+            }
+        },
+        "uniStatistics" : {
+            "enable" : true
+        },
+        "sdkConfigs" : {
+            "maps" : {
+                "qqmap" : {
+                    "key" : "3U7BZ-AZZKD-IXC4C-HZA7T-2PGKT-EZFER"
+                }
+            }
+        },
+        "unipush" : {
+            "enable" : true
+        }
+    },
+    "mp-alipay" : {
+        "uniStatistics" : {
+            "enable" : true
+        }
+    },
+    "mp-baidu" : {
+        "uniStatistics" : {
+            "enable" : true
+        }
+    },
+    "mp-kuaishou" : {
+        "uniStatistics" : {
+            "enable" : true
+        }
+    },
+    "mp-lark" : {
+        "uniStatistics" : {
+            "enable" : true
+        }
+    },
+    "mp-qq" : {
+        "uniStatistics" : {
+            "enable" : true
+        }
+    },
+    "mp-toutiao" : {
+        "uniStatistics" : {
+            "enable" : true
+        }
+    }
+}

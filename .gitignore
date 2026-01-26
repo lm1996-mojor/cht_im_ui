@@ -1,15 +1,8 @@
-# macOS
-
-.DS_Store
-
-# Node
-
-node_modules
-
-# IDE
-
-.idea/
-
-.code/
-
-.vscode/
+/.hbuilderx/
+/node_modules/
+/unpackage/dist/
+/package-lock.json
+/unpackage/release/
+/unpackage/cache/
+/json/
+/unpackage/debug/
