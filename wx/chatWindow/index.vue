@@ -243,6 +243,8 @@
 		},
 		onReady() {},
 		onShow() {
+			//标记会话已读
+			this.readed();
 			// ========== ✅ 监听全局推送消息 (核心) ==========
 			this.socketPush = uni.$on('onSocketPush', (pushData) => {
 				console.log('当前页面收到推送：', pushData);
@@ -279,6 +281,20 @@
 			}
 		},
 		methods: {
+			readed(){
+				this.$http.request({
+					url: '/chat_im/conversations/read',
+					method: 'PUT',
+					data: JSON.stringify({
+						conversationId:this.conversationsId
+					}),
+					success: res => {
+						if (res.data.code == '200') {
+							//
+						}
+					}
+				});
+			},
 			addMsg(e) {
 				this.msg += e;
 			},
@@ -327,7 +343,7 @@
 				this.showVice = !this.showVice;
 			},
 			upLoadoneComplete(e) {
-				this.sendMsg(JSON.stringify(e), e.type);
+				this.sendMsg(JSON.stringify(e), 2);
 			},
 			upLoadallComplete(e) {
 				// this.sendMsg(JSON.stringify(e),'IMAGE')
@@ -721,7 +737,7 @@
 						"Authorization": `${token}`,
 						"fromUserId": userInfo.id,
 						// "toUserId": this.userId,
-						"messageType": 1,
+						"messageType": msgType||1,
 						"content": e,
 						"conversationsId":this.conversationsId
 						// "extra": {
