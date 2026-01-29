@@ -71,6 +71,12 @@
               mode="aspectFill"
               @click="$fc.previewImagesolo(returnParse(item.content).url)"
             ></image>
+            <note-item
+              class="zfb-tk-item-c"
+              v-if="item.messageType == 6"
+              :data="JSON.parse(item.content)"
+              @click="$fc.previewImagesolo(returnParse(item.content).url)"
+            ></note-item>
             <view
               v-if="item.messageType == 'VOICE'"
               class="zfb-tk-item-c-VOICE"
