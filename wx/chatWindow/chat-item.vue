@@ -75,7 +75,7 @@
               class="zfb-tk-item-c"
               v-if="item.messageType == 6"
               :data="JSON.parse(item.content)"
-              @click="$fc.previewImagesolo(returnParse(item.content).url)"
+              @click="previewNote(item)"
             ></note-item>
             <view
               v-if="item.messageType == 'VOICE'"
