@@ -164,7 +164,14 @@ export default {
             for (let i = 0; i < this.selectedNotes.length; i++) {
               promiseWorkList.push(
                 new Promise((resolve, reject) => {
-                  this.sendMsg(this.selectedNotes[i].content, 6, item.id)
+                  this.sendMsg(
+                    JSON.stringify({
+                      noteId: this.selectedNotes[i].id,
+                      noteDetail: this.selectedNotes[i].content
+                    }),
+                    6,
+                    item.id
+                  )
                   resolve()
                 })
               )

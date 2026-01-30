@@ -74,7 +74,7 @@
             <note-item
               class="zfb-tk-item-c"
               v-if="item.messageType == 6"
-              :data="JSON.parse(item.content)"
+              :data="JSON.parse(JSON.parse(item.content).noteDetail)"
               @click="previewNote(item)"
             ></note-item>
             <view
@@ -221,6 +221,11 @@ export default {
     }
   },
   methods: {
+    previewNote(e) {
+      uni.navigateTo({
+        url: '../notes/preview?noteId=' + this.returnParse(e.content).noteId
+      })
+    },
     sendVoiceCall() {
       //发起语音
       uni.showLoading({

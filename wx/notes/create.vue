@@ -1,14 +1,5 @@
 <template>
   <view class="note-page-wrap">
-    <!-- 顶部操作栏：新增预览按钮 -->
-
-    <!-- 引入预览组件 -->
-    <note-preview
-      v-if="previewShow"
-      :content-list="contentList"
-      :visible="previewShow"
-      @close="previewShow = false"
-    />
     <!-- 唯一滚动区域 -->
     <scroll-view scroll-y class="note-create-page">
       <!-- 内容块列表 - 支持拖拽排序 -->
@@ -158,6 +149,20 @@
         </view>
       </view>
     </uni-drawer>
+    <uni-drawer
+      ref="noteDrawer"
+      mode="right"
+      :mask-click="true"
+      :show="false"
+      :width="windowWidth"
+    >
+      <note-preview ref="noteListRef" :contentList="contentList"></note-preview>
+      <view class="circle-confirm-btn-wrap">
+        <button class="circle-confirm-btn" @click="closeNoteDrawer">
+          返回编辑
+        </button>
+      </view>
+    </uni-drawer>
   </view>
 </template>
 
@@ -201,6 +206,9 @@ export default {
     // #endif
   },
   methods: {
+    closeNoteDrawer(item) {
+      this.$refs.noteDrawer.close()
+    },
     handleCircleSelect(item) {
       this.selectedCircleId = item.friendInfo.id
       this.selectedCircle = item.friendInfo
@@ -258,7 +266,7 @@ export default {
     },
     // 显示预览弹窗
     showPreview() {
-      this.previewShow = true
+      this.$refs.noteDrawer.open()
       // 禁止页面滚动
       // uni.setStyle({
       //   selector: 'page',
@@ -699,5 +707,11 @@ page {
   border-radius: 8rpx;
   font-size: 28rpx;
   margin-right: 15rpx;
+}
+.circle-confirm-btn-wrap {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
 }
 </style>

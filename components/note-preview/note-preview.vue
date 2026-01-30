@@ -1,65 +1,62 @@
 <template>
-  <view class="note-preview-wrap" v-if="visible">
-    <!-- 关闭预览按钮 -->
-    <view class="close-btn" @click="handleClose">×</view>
-    
+  <view class="note-preview-wrap">
     <!-- 预览内容滚动区域 -->
-    <scroll-view scroll-y class="preview-content">
-      <!-- 内容块列表 -->
-      <view 
-        class="preview-block"
-        v-for="(item, index) in contentList" 
-        :key="item.id"
-        :style="{marginBottom: '40rpx'}"
-      >
-        <!-- 标题块预览 -->
-        <view v-if="item.dataType === 'title'" class="preview-title">
-          {{ item.content || '请输入标题' }}
-        </view>
-        
-        <!-- 文本块预览 -->
-        <view v-if="item.dataType === 'text'" class="preview-text">
-          {{ item.content || '请输入文本内容' }}
-        </view>
-        
-        <!-- 图片块预览 -->
-        <view v-if="item.dataType === 'image'" class="preview-media-wrap">
-          <image 
-            :src="item.content" 
-            mode="widthFix" 
-            class="preview-img"
-            @error="handleImageError"
-          />
-        </view>
-        
-        <!-- 视频块预览 -->
-        <view v-if="item.dataType === 'video'" class="preview-media-wrap">
-          <video 
-            :src="item.content" 
-            class="preview-video"
-            controls
-            show-center-play-btn
-          />
-        </view>
-		<!-- 个人名片 -->
-		<view v-if="item.dataType === 'user'" class="block-content">
-			<view class="preview-wrap">
-				<view class="user">
-					<user-avatar :modelValue="item.data.avatar"></user-avatar>
-					<view>
-						<view>{{item.data.nickname}}</view>
-						<view>{{item.data.account}}</view>
-					</view>
-				</view>
-			</view>
-		</view>
+    <!-- <scroll-view scroll-y class="preview-content"> -->
+    <!-- 内容块列表 -->
+    <view
+      class="preview-block"
+      v-for="(item, index) in contentList"
+      :key="item.id"
+      :style="{ marginBottom: '40rpx' }"
+    >
+      <!-- 标题块预览 -->
+      <view v-if="item.dataType === 'title'" class="preview-title">
+        {{ item.content || '请输入标题' }}
       </view>
-      
-      <!-- 空状态提示 -->
-      <view v-if="contentList.length === 0" class="empty-tips">
-        暂无内容可预览
+
+      <!-- 文本块预览 -->
+      <view v-if="item.dataType === 'text'" class="preview-text">
+        {{ item.content || '请输入文本内容' }}
       </view>
-    </scroll-view>
+
+      <!-- 图片块预览 -->
+      <view v-if="item.dataType === 'image'" class="preview-media-wrap">
+        <image
+          :src="item.content"
+          mode="widthFix"
+          class="preview-img"
+          @error="handleImageError"
+        />
+      </view>
+
+      <!-- 视频块预览 -->
+      <view v-if="item.dataType === 'video'" class="preview-media-wrap">
+        <video
+          :src="item.content"
+          class="preview-video"
+          controls
+          show-center-play-btn
+        />
+      </view>
+      <!-- 个人名片 -->
+      <view v-if="item.dataType === 'user'" class="block-content">
+        <view class="preview-wrap">
+          <view class="user">
+            <user-avatar :modelValue="item.data.avatar"></user-avatar>
+            <view>
+              <view>{{ item.data.nickname }}</view>
+              <view>{{ item.data.account }}</view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 空状态提示 -->
+    <view v-if="contentList.length === 0" class="empty-tips">
+      暂无内容可预览
+    </view>
+    <!-- </scroll-view> -->
   </view>
 </template>
 
@@ -83,12 +80,12 @@ export default {
   methods: {
     // 关闭预览（向父组件发送事件）
     handleClose() {
-      this.$emit('close');
+      this.$emit('close')
     },
     // 图片加载错误处理
     handleImageError(e) {
       // 替换为默认占位图（可根据项目路径调整）
-      e.target.src = '/static/images/default-img.png';
+      e.target.src = '/static/images/default-img.png'
     }
   }
 }
@@ -97,7 +94,7 @@ export default {
 <style scoped>
 /* 预览组件容器（全屏覆盖） */
 .note-preview-wrap {
-  position: fixed;
+  /* position: fixed;
   top: 0;
   left: 0;
   right: 0;
@@ -110,7 +107,7 @@ export default {
 	  gap:4px;
 	  padding:4px;
 	  align-items: center;
-  }
+  } */
 }
 
 /* 关闭按钮 */
@@ -124,10 +121,10 @@ export default {
   text-align: center;
   font-size: 36rpx;
   color: #666;
-  background: rgba(255,255,255,0.8);
+  background: rgba(255, 255, 255, 0.8);
   border-radius: 50%;
   z-index: 10000;
-  box-shadow: 0 2rpx 10rpx rgba(0,0,0,0.1);
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.1);
 }
 
 /* 预览内容滚动区 */
@@ -135,7 +132,6 @@ export default {
   width: 100%;
   height: 100%;
   padding: 30rpx;
-  padding-top: 80rpx;
   box-sizing: border-box;
 }
 

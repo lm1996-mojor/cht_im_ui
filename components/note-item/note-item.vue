@@ -35,9 +35,9 @@ export default {
   },
   computed: {
     noteData() {
-      const imgItem = this.data.find(item => item.dataType === 'image')
-      const titleItem = this.data.find(item => item.dataType === 'title')
-      const textItem = this.data.find(item => item.dataType === 'text')
+      const imgItem = this?.data?.find(item => item.dataType === 'image')
+      const titleItem = this?.data?.find(item => item.dataType === 'title')
+      const textItem = this?.data?.find(item => item.dataType === 'text')
       return {
         imgItem,
         titleItem,

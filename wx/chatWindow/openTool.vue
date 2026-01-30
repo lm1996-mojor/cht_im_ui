@@ -116,7 +116,6 @@ export default {
       })
     },
     chexiao() {
-      debugger
       this.$http.request({
         url: '/chat_im/message/recall',
         method: 'POST',
