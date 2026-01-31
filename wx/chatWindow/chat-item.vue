@@ -72,7 +72,7 @@
               @click="$fc.previewImagesolo(returnParse(item.content).url)"
             ></image>
             <note-item
-              class="zfb-tk-item-c"
+              class="zfb-tk-item-c-CARD"
               v-if="item.messageType == 6"
               :data="JSON.parse(JSON.parse(item.content).noteDetail)"
               @click="previewNote(item)"
@@ -120,10 +120,14 @@
             </view>
             <view
               class="zfb-tk-item-c-video"
-              v-if="item.messageType == 'VIDEO'"
-              @click="openVideo(returnParse(item.content).videoUrl)"
+              v-if="item.messageType == '4'"
+              @click="openVideo(returnParse(item.content).url)"
             >
-              <image
+			<view>
+			                <video id="myVideo" :src="returnParse(item.content).url"
+			                    @error="videoErrorCallback" :danmu-list="danmuList" enable-danmu danmu-btn controls></video>
+			            </view>
+              <!-- <image
                 class="zfb-tk-item-c-img"
                 :src="returnParse(item.content).url"
                 mode="aspectFill"
@@ -131,7 +135,7 @@
               </image>
               <view class="zfb-tk-item-c-video-icon">
                 <text class="wxfont bofang"></text>
-              </view>
+              </view> -->
             </view>
             <view
               class="zfb-tk-item-c-CARD"

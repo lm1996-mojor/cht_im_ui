@@ -2,7 +2,8 @@
 	<view class="note-page-wrap">
 		<!-- 引入预览组件 -->
 		<note-preview  :content-list="contentList" :visible="true"
-			@close="previewShow = false" />
+			@close="previewShow = false" 
+			@clickUser="handleClick" />
 	</view>
 </template>
 
@@ -32,6 +33,9 @@
 					}
 				});
 
+			},
+			handleClick(e){
+				uni.navigateTo({ url: `../personInfo/detail?userId=${e.data.id}&source=${e.source}` });
 			}
 		}
 	}
@@ -46,12 +50,13 @@
 	}
 
 	.note-page-wrap {
+		padding:5px;
 		width: 100%;
 		height: 100vh;
 		background-color: #f8f8f8;
 		box-sizing: border-box;
 		position: relative;
-		overflow: hidden !important;
+		overflow: auto !important;
 	}
 
 	/* 滚动区域 */

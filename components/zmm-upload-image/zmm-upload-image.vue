@@ -175,37 +175,92 @@
 					return;
 				}
 				uni.chooseVideo({
+					count: _self.limit - _self.localFileList.length,
 					sourceType: ['album', 'camera'],
 					compressed: true,
+					// success: function(e) {
+					// 	if (_self.showUploadProgress) uni.showLoading({ title: '上传中...' })
+					// 	uploadVideo(e).then(res => {
+					// 		uni.hideLoading()
+					// 		_self.localFileList.push(res); // ✅ 直接push本地数组，立刻显示
+					// 		_self.$emit('allComplete', res, _self.chooseType);
+					// 		_self.$emit('input', _self.localFileList);
+					// 		_self.$emit('update:modelValue', _self.localFileList);
+					// 	})
+					// 	function uploadVideo(e) {
+					// 		return new Promise((resolve, reject) => {
+					// 			uni.uploadFile({
+					// 				url: _self.videoAction,
+					// 				fileType: 'video',
+					// 				header: _self.header,
+					// 				filePath: e.tempFilePath,
+					// 				name: _self.fileKey,
+					// 				formData: {..._self.formData,fileType: 'video'},
+					// 				success: function(res) {
+					// 					if (res.statusCode === 200 && !_self.isDestroyed) {
+					// 						var resItem = JSON.parse(res.data)
+					// 						var fresult = {name: resItem.data.fileName,videoUrl: resItem.data.fullPath,url: resItem.data.screenShot,type: 'VIDEO'}
+					// 						_self.$emit('oneComplete', fresult, _self.chooseType);
+					// 						resolve(fresult)
+					// 					} else { reject(res) }
+					// 				},
+					// 				fail: () => { uni.showToast({title: '上传失败请检查网络',icon: 'none'}); reject(res) }
+					// 			});
+					// 		})
+					// 	}
+					// }
 					success: function(e) {
-						if (_self.showUploadProgress) uni.showLoading({ title: '上传中...' })
-						uploadVideo(e).then(res => {
-							uni.hideLoading()
-							_self.localFileList.push(res); // ✅ 直接push本地数组，立刻显示
-							_self.$emit('allComplete', res, _self.chooseType);
-							_self.$emit('input', _self.localFileList);
+						var imagePathArr = [e.tempFilePath];
+						if (_self.fileAction) {
+							uni.showToast({ title: '开始上传...', icon: 'none' });
+							var promiseWorkList = [];
+							var keyname = _self.fileKey;
+							var completeImages = 0;
+					
+							for (let i = 0; i < imagePathArr.length; i++) {
+					            // ✅✅✅【核心修复】异步BUG：把getFileInfo封装进Promise内部，保证Promise能被正确收集
+								promiseWorkList.push(new Promise((resolve, reject) => {
+									let filePath = imagePathArr[i];
+									uni.getFileInfo({
+										filePath: filePath,
+										success: function(infoRes) {
+											uni.uploadFile({
+												url: _self.fileAction,
+												fileType: 'video',
+												header: _self.header,
+												filePath: filePath,
+												name: keyname,
+												formData: { ..._self.formData, fileName: 'test', fileType: 'video', totalSize: infoRes.size },
+												success: function(res) {
+													if (res.statusCode === 200 && !_self.isDestroyed) {
+														completeImages++;
+														uni.showToast({ title: `已上传${completeImages}/${imagePathArr.length}`, icon: 'none' });
+														var resItem = JSON.parse(res.data)
+														const fileItem = {name: resItem.data.fileName,url: resItem.data.storagePath,type: 'video'}
+														_self.$emit('oneComplete', fileItem, _self.chooseType,'video');
+														resolve(fileItem); // ✅ 返回数据给Promise.all
+													} else { reject('上传失败'); }
+												},
+												fail: () => { uni.showToast({title: '上传失败请检查网络',icon: 'none'}); reject('上传失败'); }
+											});
+										},
+										fail: () => { reject('获取文件信息失败'); }
+									});
+								}));
+							}
+							// ✅ 所有上传完成后，直接赋值给本地数组，页面立刻渲染！！！
+							Promise.all(promiseWorkList).then(result => {
+								if (_self.isDestroyed) return;
+								_self.localFileList = [..._self.localFileList, ...result];
+								_self.$emit('allComplete', result, _self.chooseType);
+								_self.$emit('input', _self.localFileList); // Vue2兼容
+								_self.$emit('update:modelValue', _self.localFileList); // Vue3兼容
+							});
+						} else {
+							// 本地预览模式，直接赋值本地数组
+							let addList = imagePathArr.map((path,i)=>({name: 'avatar' + i + '.jpg',url: path}));
+							_self.localFileList = [..._self.localFileList, ...addList];
 							_self.$emit('update:modelValue', _self.localFileList);
-						})
-						function uploadVideo(e) {
-							return new Promise((resolve, reject) => {
-								uni.uploadFile({
-									url: _self.videoAction,
-									fileType: 'video',
-									header: _self.header,
-									filePath: e.tempFilePath,
-									name: _self.fileKey,
-									formData: {..._self.formData,fileType: 'video'},
-									success: function(res) {
-										if (res.statusCode === 200 && !_self.isDestroyed) {
-											var resItem = JSON.parse(res.data)
-											var fresult = {name: resItem.data.fileName,videoUrl: resItem.data.fullPath,url: resItem.data.screenShot,type: 'VIDEO'}
-											_self.$emit('oneComplete', fresult, _self.chooseType);
-											resolve(fresult)
-										} else { reject(res) }
-									},
-									fail: () => { uni.showToast({title: '上传失败请检查网络',icon: 'none'}); reject(res) }
-								});
-							})
 						}
 					}
 				});

@@ -342,8 +342,12 @@
 			changeShowVice() {
 				this.showVice = !this.showVice;
 			},
-			upLoadoneComplete(e) {
-				this.sendMsg(JSON.stringify(e), 2);
+			upLoadoneComplete(e,type,filehouzhui) {
+				let t=2//图片
+				if(filehouzhui){
+					t=4//视频
+				}
+				this.sendMsg(JSON.stringify(e), t);
 			},
 			upLoadallComplete(e) {
 				// this.sendMsg(JSON.stringify(e),'IMAGE')
