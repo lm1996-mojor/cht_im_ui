@@ -33,7 +33,7 @@
 				<view class="uni-list-chat__content">
 					<view class="uni-list-chat__content-main">
 						<text class="uni-list-chat__content-title uni-ellipsis">{{ item.title }}</text>
-						<text class="uni-list-chat__content-note uni-ellipsis">{{ item?.latestMessage?.content }}</text>
+						<text class="uni-list-chat__content-note uni-ellipsis">{{ formatLatestMessage(item?.latestMessage) }}</text>
 					</view>
 					<view class="uni-list-chat__content-extra">
 						<slot>
@@ -199,6 +199,25 @@
 			}
 		},
 		methods: {
+			formatLatestMessage(e){
+				// 1:文本 2:图片 3:语音 4:视频 5:文件 6: 笔记 7: 名片 8：位置 9：群接龙 10 ：签到 11：公告
+				if(e.messageType===2){
+					return '[图片]'
+				}
+				if(e.messageType===3){
+					return '[语音]'
+				}
+				if(e.messageType===4){
+					return '[视频]'
+				}
+				if(e.messageType===5){
+					return '[文件]'
+				}
+				if(e.messageType===6){
+					return '[笔记]'
+				}
+				return e.content
+			},
 			formatTime(time) {
 				if(!time) return ''
 				const date=new Date(time)
