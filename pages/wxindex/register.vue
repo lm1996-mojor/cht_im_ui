@@ -1,6 +1,5 @@
 <template>
   <view class="bgColor">
-    <watermark></watermark>
     <form @submit="submitForm" class="remarkForm">
       <!-- 昵称 -->
       <view class="remarkForm-item">

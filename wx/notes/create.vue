@@ -1,7 +1,7 @@
 <template>
   <view class="note-page-wrap">
     <!-- 唯一滚动区域 -->
-    <scroll-view scroll-y class="note-create-page">
+    <view class="note-create-page">
       <!-- 内容块列表 - 支持拖拽排序 -->
       <view
         class="content-block"
@@ -71,13 +71,26 @@
             <view class="delete-btn" @click="deleteBlock(index)">删除</view>
           </view>
         </view>
+        <!-- 群名片 -->
+        <view v-if="item.dataType === 'group'" class="block-content">
+          <view class="preview-wrap">
+            <view class="user">
+              <group-avatar :modelValue="item.data.avatar"></group-avatar>
+              <view>
+                <view>{{ item.data.name }}</view>
+                <!-- <view>{{ item.data.id }}</view> -->
+              </view>
+            </view>
+            <view class="delete-btn" @click="deleteBlock(index)">删除</view>
+          </view>
+        </view>
       </view>
 
       <!-- 空状态提示 -->
       <view v-if="contentList.length === 0" class="empty-tips">
         点击底部按钮添加内容
       </view>
-    </scroll-view>
+    </view>
 
     <!-- 底部固定操作栏 -->
     <view class="operate-bar">
@@ -106,64 +119,108 @@
           <uni-icons type="person-filled" size="30"></uni-icons>
           <text>名片</text>
         </view>
-        <view class="tool-item" @click="chooseVideoDirectly">
+        <view class="tool-item" @click="chooseGroup">
           <uni-icons type="staff-filled" size="30"></uni-icons>
           <text>群名片</text>
         </view>
       </view>
       <view class="btn">
-        <button style="flex: 1" class="preview-btn" @click="showPreview">
-          预览
-        </button>
-        <button style="flex: 1" class="submit-btn" @click="submitNote">
-          提交
+        <button class="preview-btn" flex="1" @click="showPreview">预览</button>
+        <button class="submit-btn" flex="1" @click="submitNote">提交</button>
+      </view>
+    </view>
+  </view>
+  <uni-drawer
+    ref="circleDrawer"
+    mode="right"
+    :mask-click="true"
+    :show="false"
+    :width="windowWidth"
+    class="circle-drawer"
+  >
+    <view class="drawer-content">
+      <uni-nav-bar
+        :fixed="true"
+        shadow
+        status-bar
+        left-icon="left"
+        left-text="返回"
+        title=""
+        @click="closeCircleDrawer"
+      />
+      <scroll-view scroll-y style="flex: 1">
+        <friend-list
+          ref="circleListRef"
+          :default-selected-id="noteForm.circleId"
+          @select="handleCircleSelect"
+        ></friend-list>
+      </scroll-view>
+      <!-- ✅ 确认按钮 现在正常显示了 -->
+      <view class="circle-confirm-btn-wrap" style="margin: 20rpx">
+        <button class="preview-btn" @click="confirmCircleSelect">
+          确认选择
         </button>
       </view>
     </view>
-    <uni-drawer
-      ref="circleDrawer"
-      mode="right"
-      :mask-click="true"
-      :show="false"
-      :width="windowWidth"
-      class="circle-drawer"
-    >
-      <view class="drawer-content">
-        <view class="drawer-header">
-          <text class="drawer-title">选择好友</text>
-          <text class="iconfont icon-close" @click="closeCircleDrawer"></text>
-        </view>
-        <!-- ✅✅✅ 仅新增这1行包裹层：解决列表滚动，不遮挡按钮，无其他修改 -->
-        <scroll-view scroll-y style="flex: 1">
-          <friend-list
-            ref="circleListRef"
-            :default-selected-id="noteForm.circleId"
-            @select="handleCircleSelect"
-          ></friend-list>
-        </scroll-view>
-        <!-- ✅ 确认按钮 现在正常显示了 -->
-        <view class="circle-confirm-btn-wrap">
-          <button class="circle-confirm-btn" @click="confirmCircleSelect">
-            确认选择
-          </button>
-        </view>
-      </view>
-    </uni-drawer>
-    <uni-drawer
-      ref="noteDrawer"
-      mode="right"
-      :mask-click="true"
-      :show="false"
-      :width="windowWidth"
-    >
-      <note-preview ref="noteListRef" :contentList="contentList"></note-preview>
-      <view class="circle-confirm-btn-wrap">
-        <button class="circle-confirm-btn" @click="closeNoteDrawer">
-          返回编辑
+  </uni-drawer>
+  <uni-drawer
+    ref="circleGroupDrawer"
+    mode="right"
+    :mask-click="true"
+    :show="false"
+    :width="windowWidth"
+    class="circle-drawer"
+  >
+    <view class="drawer-content">
+      <uni-nav-bar
+        :fixed="true"
+        shadow
+        status-bar
+        left-icon="left"
+        left-text="返回"
+        title=""
+        @click="closeCircleGroupDrawer"
+      />
+      <scroll-view scroll-y style="flex: 1">
+        <group-list
+          ref="circleGroupListRef"
+          :default-selected-id="noteForm.circleGroupId"
+          @select="handleCircleGroupSelect"
+        ></group-list>
+      </scroll-view>
+      <view class="circle-confirm-btn-wrap" style="margin: 20rpx">
+        <button class="preview-btn" @click="confirmCircleGroupSelect">
+          确认选择
         </button>
       </view>
-    </uni-drawer>
-  </view>
+    </view>
+  </uni-drawer>
+  <uni-drawer
+    ref="noteDrawer"
+    mode="right"
+    :mask-click="true"
+    :show="false"
+    :width="windowWidth"
+  >
+    <view
+      style="
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      "
+    >
+      <view style="flex: 1; height: 100%; overflow: auto">
+        <note-preview
+          ref="noteListRef"
+          :contentList="contentList"
+        ></note-preview>
+      </view>
+      <view style="padding: 20rpx">
+        <button class="preview-btn" @click="closeNoteDrawer">返回编辑</button>
+      </view>
+    </view>
+  </uni-drawer>
 </template>
 
 <script>
@@ -182,6 +239,7 @@ export default {
       windowWidth: 0,
       searchKeyword: '',
       circleId: '',
+      noteId: '',
       circleName: '',
       content: '',
       files: null,
@@ -193,6 +251,35 @@ export default {
     }
   },
   onLoad(e) {
+    this.noteId = e?.id
+    if (this.noteId) {
+      this.$http.request({
+        url: `/chat_im/notes/detail/${this.noteId}`,
+        method: 'GET',
+        success: res => {
+          if (res.data.code == 200) {
+            this.contentList = JSON.parse(res?.data?.data?.content || '[]')
+
+            this.noteForm = res.data.data
+            this.circleId = res.data.data.circleId
+            this.circleName = res.data.data.circleName
+            this.content = res.data.data.content
+            this.address = res.data.data.address
+          } else {
+            uni.showToast({
+              title: res.data.msg || '获取笔记详情失败',
+              icon: 'none'
+            })
+          }
+        },
+        fail: () => {
+          uni.showToast({
+            title: '获取笔记详情失败，请检查网络',
+            icon: 'none'
+          })
+        }
+      })
+    }
     // #ifdef H5
     this.windowWidth = document.documentElement.clientWidth
     // #endif
@@ -214,8 +301,16 @@ export default {
       this.selectedCircle = item.friendInfo
       console.log('选中的圈子', item)
     },
+    handleCircleGroupSelect(item) {
+      this.selectedCircleGroupId = item.id
+      this.selectedCircleGroup = item
+      console.log('选中的圈子', item)
+    },
     closeCircleDrawer() {
       this.$refs.circleDrawer.close()
+    },
+    closeCircleGroupDrawer() {
+      this.$refs.circleGroupDrawer.close()
     },
     confirmCircleSelect() {
       if (!this.selectedCircleId) {
@@ -224,17 +319,6 @@ export default {
           icon: 'none'
         })
       }
-      // const a = {
-      // 	"content": "内容",
-      // 	"dataType": "text/img/video/address/user/group",
-      // 	"order": 1,
-      // 	"data": {
-      // 		"id": "id",
-      // 		"avatar": "头像",
-      // 		"nickname": "昵称",
-      // 		"account": "账号"
-      // 	}
-      // }
       const newBlock = {
         id: Date.now() + Math.random(), // 唯一ID
         type: 'user',
@@ -258,10 +342,46 @@ export default {
       // this.noteForm.circleName = selectItem.name
       this.closeCircleDrawer()
     },
+    confirmCircleGroupSelect() {
+      if (!this.selectedCircleGroupId) {
+        return uni.showToast({
+          title: '请选择一个',
+          icon: 'none'
+        })
+      }
+      const newBlock = {
+        id: Date.now() + Math.random(), // 唯一ID
+        type: 'user',
+        content: this.selectedCircleGroupId, // 标题/文本先添加空块
+        // "content": "内容",
+        dataType: 'group',
+        order: 1,
+        data: {
+          ...this.selectedCircleGroup
+          // id: this.selectedCircle.id,
+          // avatar:this.selectedCircle.avatar
+        }
+      }
+      this.contentList.push(newBlock)
+      this.updateBlockRects()
+      // const selectItem = {
+      // 	id: this.selectedCircleId,
+      // 	name: this.$refs.circleListRef.content.find(item => item.id == this.selectedCircleId)?.name
+      // }
+      // this.noteForm.circleId = selectItem.id
+      // this.noteForm.circleName = selectItem.name
+      this.closeCircleGroupDrawer()
+    },
     choosePerson() {
       this.$refs.circleDrawer.open()
       this.$nextTick(() => {
         this.$refs.circleListRef.initLoad()
+      })
+    },
+    chooseGroup() {
+      this.$refs.circleGroupDrawer.open()
+      this.$nextTick(() => {
+        this.$refs.circleGroupListRef.initLoad()
       })
     },
     // 显示预览弹窗
@@ -483,7 +603,7 @@ export default {
               uni.navigateBack({
                 delta: 1
               })
-            }, 1500)
+            }, 500)
           } else {
             uni.showToast({
               title: res.data.msg || '提交失败',
@@ -513,11 +633,13 @@ page {
 
 .note-page-wrap {
   width: 100%;
-  height: 100vh;
+  height: 100%;
   background-color: #f8f8f8;
   box-sizing: border-box;
   position: relative;
   overflow: hidden !important;
+  display: flex;
+  flex-direction: column;
 }
 
 /* 滚动区域 */
@@ -525,8 +647,9 @@ page {
   width: 100%;
   height: 100%;
   padding: 30rpx;
-  padding-bottom: 150rpx;
   box-sizing: border-box;
+  flex: 1;
+  overflow: auto !important;
 }
 
 /* 空状态提示 */
@@ -545,7 +668,7 @@ page {
   border-radius: 10rpx;
   border: 1px solid #eee;
   /* padding: 20rpx; */
-  position: relative;
+  /* position: relative; */
 }
 
 /* 拖拽手柄 */
@@ -644,10 +767,10 @@ page {
 
 /* 底部操作栏 */
 .operate-bar {
-  position: fixed;
+  /* position: fixed;
   bottom: 0;
   left: 0;
-  right: 0;
+  right: 0; */
   display: flex;
   padding: 20rpx 30rpx;
   background: #fff;
@@ -674,39 +797,22 @@ page {
     align-items: center;
     justify-content: space-between;
     gap: 10rpx;
-
-    .submit-btn {
-      /* height: 80rpx; */
-      /* line-height: 80rpx; */
-      background: #007aff;
-      color: #fff;
-      border: none;
-      border-radius: 40rpx;
-      /* font-size: 28rpx; */
-    }
-
-    .preview-btn {
-      /* height: 80rpx; */
-      /* line-height: 80rpx; */
-      background: #007aff;
-      color: #fff;
-      border: none;
-      border-radius: 40rpx;
-      /* font-size: 28rpx; */
-    }
   }
 }
-
-.operate-btn {
-  flex: 1;
-  height: 80rpx;
-  line-height: 80rpx;
-  background: #f7f8fa;
-  color: #333;
+.submit-btn {
+  background: #007aff;
+  color: #fff;
   border: none;
-  border-radius: 8rpx;
-  font-size: 28rpx;
-  margin-right: 15rpx;
+  border-radius: 40rpx;
+  width: 100%;
+}
+
+.preview-btn {
+  background: #007aff;
+  color: #fff;
+  border: none;
+  border-radius: 40rpx;
+  width: 100%;
 }
 .circle-confirm-btn-wrap {
   position: fixed;

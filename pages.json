@@ -80,16 +80,16 @@
       },
       {
         "pagePath": "wx/tabbar3/index",
-        "iconPath": "static/wx/n02.png",
-        "selectedIconPath": "static/wx/n02_on.png",
-        "text": "发现"
-      },
-      {
-        "pagePath": "wx/tabbar4/index",
         "iconPath": "static/wx/n03.png",
         "selectedIconPath": "static/wx/n03_on.png",
         "text": "我"
       }
+      // {
+      //   "pagePath": "wx/tabbar4/index",
+      //   "iconPath": "static/wx/n03.png",
+      //   "selectedIconPath": "static/wx/n03_on.png",
+      //   "text": "我"
+      // }
     ]
   },
   "subPackages": [
@@ -242,23 +242,24 @@
           "aliasPath": "/wxtabbar3",
           "requireAuth": true,
           "style": {
-            "navigationBarTitleText": "发现",
-            "app-plus": {
-              "titleNView": {
-                "buttons": [
-                  {
-                    "text": "\ue657",
-                    "fontSrc": "/static/wx_iconfont.ttf",
-                    "fontSize": "28px"
-                  },
-                  {
-                    "text": "\ue636",
-                    "fontSrc": "/static/wx_iconfont.ttf",
-                    "fontSize": "26px"
-                  }
-                ]
-              }
-            }
+            "navigationStyle": "custom",
+            "navigationBarTitleText": "我"
+            // "app-plus": {
+            //   "titleNView": {
+            //     "buttons": [
+            //       {
+            //         "text": "\ue657",
+            //         "fontSrc": "/static/wx_iconfont.ttf",
+            //         "fontSize": "28px"
+            //       },
+            //       {
+            //         "text": "\ue636",
+            //         "fontSrc": "/static/wx_iconfont.ttf",
+            //         "fontSize": "26px"
+            //       }
+            //     ]
+            //   }
+            // }
           }
         },
         {
@@ -794,15 +795,15 @@
                     "fontSize": "16px",
                     "borderRadius": "0px",
                     "background": "#09C160"
-                  },
-                  {
-                    "color": "#09C160",
-                    "text": "发送",
-                    // "fontSrc": "/static/wx_iconfont.ttf",
-                    "fontSize": "16px",
-                    "borderRadius": "0px",
-                    "background": "#09C160"
                   }
+                  // {
+                  //   "color": "#09C160",
+                  //   "text": "发送",
+                  //   // "fontSrc": "/static/wx_iconfont.ttf",
+                  //   "fontSize": "16px",
+                  //   "borderRadius": "0px",
+                  //   "background": "#09C160"
+                  // }
                 ],
                 "backButton": {
                   "background": "rgba(0,0,0,0)"

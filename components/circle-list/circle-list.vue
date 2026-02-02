@@ -1,180 +1,207 @@
 <template>
-	<view class="circle-list-page">
-		<watermark />
-		
-		<!-- 搜索框区域 - 去掉fixed定位，适配抽屉布局 -->
-		<view class="search-wrap">
-			<input 
-				v-model="searchKeyword" 
-				class="search-input" 
-				placeholder="搜索圈子名称/描述"
-				@input="handleSearch"
-			/>
-		</view>
-		
-		<view class="note-list-wrap">
-			<view 
-				class="note-item" 
-				v-for="item in filteredContent" 
-				:key="item.id"
-				:class="selectedCircleId === item.id ? 'active' : ''"
-				@click="handleSelectItem(item)"
-			>
-				<view class="note-card">
-					<!-- ✅ 你之前加的单选按钮，保留不动 -->
-					<view class="radio-btn" @click.stop="handleSelectItem(item)">
-						<view class="radio-icon" :class="selectedCircleId === item.id ? 'checked' : ''"></view>
-					</view>
-					
-					<view class="card-header">
-						<image class="avatar" :src="item.avatar || 'https://cdn.svipaigc.com/bizi/2024/07/61b9.jpg'" mode="aspectFill" />
-						<view class="header-info">
-							<view class="title-box">
-								<text class="note-title">{{ item.name || '未命名圈子' }}</text>
-								<text class="public-text" :class="item.isPublic ? 'public' : 'private'" v-if="item.isPublic !== null">
-									{{ item.isPublic ? '公开' : '私密' }}
-								</text>
-							</view>
-						</view>
-					</view>
+  <view class="circle-list-page">
+    <!-- 搜索框区域 - 去掉fixed定位，适配抽屉布局 -->
+    <view class="search-wrap">
+      <input
+        v-model="searchKeyword"
+        class="search-input"
+        placeholder="搜索圈子名称/描述"
+        @input="handleSearch"
+      />
+    </view>
 
-					<view class="note-content" v-html="item.description || '暂无圈子介绍'"></view>
-				</view>
-			</view>
-			<view class="empty-tip" v-if="filteredContent.length === 0 && !isLoading">
-				{{ searchKeyword ? '未找到匹配的圈子' : '暂无圈子数据' }}
-			</view>
-		</view>
-		<uni-load-more :status="queryParams.status" class="load-more" v-if="filteredContent.length > 0" />
-	</view>
+    <view class="note-list-wrap">
+      <view
+        class="note-item"
+        v-for="item in filteredContent"
+        :key="item.id"
+        :class="selectedCircleId === item.id ? 'active' : ''"
+        @click="handleSelectItem(item)"
+      >
+        <view class="note-card">
+          <!-- ✅ 你之前加的单选按钮，保留不动 -->
+          <view class="radio-btn" @click.stop="handleSelectItem(item)">
+            <view
+              class="radio-icon"
+              :class="selectedCircleId === item.id ? 'checked' : ''"
+            ></view>
+          </view>
+
+          <view class="card-header">
+            <image
+              class="avatar"
+              :src="
+                item.avatar || 'https://cdn.svipaigc.com/bizi/2024/07/61b9.jpg'
+              "
+              mode="aspectFill"
+            />
+            <view class="header-info">
+              <view class="title-box">
+                <text class="note-title">{{ item.name || '未命名圈子' }}</text>
+                <text
+                  class="public-text"
+                  :class="item.isPublic ? 'public' : 'private'"
+                  v-if="item.isPublic !== null"
+                >
+                  {{ item.isPublic ? '公开' : '私密' }}
+                </text>
+              </view>
+            </view>
+          </view>
+
+          <view
+            class="note-content"
+            v-html="item.description || '暂无圈子介绍'"
+          ></view>
+        </view>
+      </view>
+      <view class="empty-tip" v-if="filteredContent.length === 0 && !isLoading">
+        {{ searchKeyword ? '未找到匹配的圈子' : '暂无圈子数据' }}
+      </view>
+    </view>
+    <uni-load-more
+      :status="queryParams.status"
+      class="load-more"
+      v-if="filteredContent.length > 0"
+    />
+  </view>
 </template>
 
 <script>
-	export default {
-		// name: 'CircleList', // 你注释的保留不动
-		props: {
-			defaultSelectedId: {
-				type: [String, Number],
-				default: ''
-			},
-			disabled: {
-				type: Boolean,
-				default: false
-			}
-		},
-		data() {
-			return {
-				queryParams: {
-					refreshing: false,
-					status: 'more',
-					page: 1,
-					pageSize: 10,
-					userId: '',
-					searchType: 0,
-					keyword: ''
-				},
-				content: [],
-				filteredContent: [],
-				isLoading: false,
-				searchKeyword: '',
-				selectedCircleId: ''
-			};
-		},
-		computed: {
-			cover() {
-				return {type: 'img',url: 'https://cdn.svipaigc.com/bizi/2024/07/61b9.jpg'};
-			},
-			userInfo() {
-				return this.$store.state.userInfo;
-			},
-			topicReply() {
-				return this.$store.state.topicReply;
-			}
-		},
-		watch: {
-			defaultSelectedId: {
-				immediate: true,
-				handler(val) {
-					this.selectedCircleId = val;
-				}
-			}
-		},
-		mounted() {
-			this.queryParams.userId = this.userInfo?.userId || '';
-		},
-		methods: {
-			formatTime(timeStr) {
-				if (!timeStr) return '未知时间';
-				const date = new Date(timeStr);
-				if (date.toString() === 'Invalid Date') return '未知时间';
-				const year = date.getFullYear();
-				const month = (date.getMonth() + 1).toString().padStart(2, '0');
-				const day = date.getDate().toString().padStart(2, '0');
-				const hour = date.getHours().toString().padStart(2, '0');
-				const minute = date.getMinutes().toString().padStart(2, '0');
-				return `${year}-${month}-${day} ${hour}:${minute}`;
-			},
-			handleRefresh() {
-				if (this.isLoading) return;
-				this.queryParams.page = 1;
-				this.queryParams.status = 'more';
-				this.queryParams.refreshing = true;
-				this.content = [];
-				this.getlist();
-			},
-			getlist() {
-				if (this.isLoading) return;
-				this.isLoading = true;
-				this.queryParams.status = 'loading';
+export default {
+  // name: 'CircleList', // 你注释的保留不动
+  props: {
+    defaultSelectedId: {
+      type: [String, Number],
+      default: ''
+    },
+    disabled: {
+      type: Boolean,
+      default: false
+    }
+  },
+  data() {
+    return {
+      queryParams: {
+        refreshing: false,
+        status: 'more',
+        page: 1,
+        pageSize: 10,
+        userId: '',
+        keyword: '',
+        searchType: 1
+      },
+      content: [],
+      filteredContent: [],
+      isLoading: false,
+      searchKeyword: '',
+      selectedCircleId: ''
+    }
+  },
+  computed: {
+    cover() {
+      return {
+        type: 'img',
+        url: 'https://cdn.svipaigc.com/bizi/2024/07/61b9.jpg'
+      }
+    },
+    userInfo() {
+      return this.$store.state.userInfo
+    },
+    topicReply() {
+      return this.$store.state.topicReply
+    }
+  },
+  watch: {
+    defaultSelectedId: {
+      immediate: true,
+      handler(val) {
+        this.selectedCircleId = val
+      }
+    }
+  },
+  mounted() {
+    this.queryParams.userId = this.userInfo?.userId || ''
+  },
+  methods: {
+    formatTime(timeStr) {
+      if (!timeStr) return '未知时间'
+      const date = new Date(timeStr)
+      if (date.toString() === 'Invalid Date') return '未知时间'
+      const year = date.getFullYear()
+      const month = (date.getMonth() + 1).toString().padStart(2, '0')
+      const day = date.getDate().toString().padStart(2, '0')
+      const hour = date.getHours().toString().padStart(2, '0')
+      const minute = date.getMinutes().toString().padStart(2, '0')
+      return `${year}-${month}-${day} ${hour}:${minute}`
+    },
+    handleRefresh() {
+      if (this.isLoading) return
+      this.queryParams.page = 1
+      this.queryParams.status = 'more'
+      this.queryParams.refreshing = true
+      this.content = []
+      this.getlist()
+    },
+    getlist() {
+      if (this.isLoading) return
+      this.isLoading = true
+      this.queryParams.status = 'loading'
 
-				this.$fc.loadMore({
-					url: '/chat_im/circles/page?',
-					queryParams: this.queryParams
-				}).then(res => {
-					const list = res?.list || [];
-					this.content = this.queryParams.page === 1 ? list : [...this.content, ...list];
-					this.handleSearch();
-					if (list.length < this.queryParams.pageSize) {
-						this.queryParams.status = 'noMore';
-					} else {
-						this.queryParams.status = 'more';
-					}
-				}).catch(err => {
-					console.error('列表请求失败', err)
-					this.queryParams.status = 'more';
-				}).finally(() => {
-					this.isLoading = false;
-					if (this.queryParams.refreshing) {
-						uni.stopPullDownRefresh();
-						this.queryParams.refreshing = false;
-					}
-				});
-			},
-			handleSearch() {
-				if (!this.searchKeyword) {
-					this.filteredContent = [...this.content];
-					return;
-				}
-				const keyword = this.searchKeyword.trim().toLowerCase();
-				this.filteredContent = this.content.filter(item => {
-					const nameMatch = item.name?.toLowerCase().includes(keyword) || false;
-					const descMatch = item.description?.toLowerCase().includes(keyword) || false;
-					return nameMatch || descMatch;
-				});
-			},
-			handleSelectItem(item) {
-				if (this.disabled) return;
-				this.selectedCircleId = item.id;
-				this.$emit('select', item);
-			},
-			userClick(cover, user) {
-				uni.navigateTo({url: '../../wx/friendsCircle/person'});
-			},
-			initLoad(){
-				this.handleRefresh()
-			}
-		}
-	};
+      this.$fc
+        .loadMore({
+          url: '/chat_im/circles/page?',
+          queryParams: this.queryParams
+        })
+        .then(res => {
+          const list = res?.list || []
+          this.content =
+            this.queryParams.page === 1 ? list : [...this.content, ...list]
+          this.handleSearch()
+          if (list.length < this.queryParams.pageSize) {
+            this.queryParams.status = 'noMore'
+          } else {
+            this.queryParams.status = 'more'
+          }
+        })
+        .catch(err => {
+          console.error('列表请求失败', err)
+          this.queryParams.status = 'more'
+        })
+        .finally(() => {
+          this.isLoading = false
+          if (this.queryParams.refreshing) {
+            uni.stopPullDownRefresh()
+            this.queryParams.refreshing = false
+          }
+        })
+    },
+    handleSearch() {
+      if (!this.searchKeyword) {
+        this.filteredContent = [...this.content]
+        return
+      }
+      const keyword = this.searchKeyword.trim().toLowerCase()
+      this.filteredContent = this.content.filter(item => {
+        const nameMatch = item.name?.toLowerCase().includes(keyword) || false
+        const descMatch =
+          item.description?.toLowerCase().includes(keyword) || false
+        return nameMatch || descMatch
+      })
+    },
+    handleSelectItem(item) {
+      if (this.disabled) return
+      this.selectedCircleId = item.id
+      this.$emit('select', item)
+    },
+    userClick(cover, user) {
+      uni.navigateTo({ url: '../../wx/friendsCircle/person' })
+    },
+    initLoad() {
+      this.handleRefresh()
+    }
+  }
+}
 </script>
 
 <style scoped lang="scss">
@@ -310,21 +337,27 @@
         padding: 4rpx 10rpx;
         border-radius: 10rpx;
         line-height: 1;
-        &.public { color: #10b981;background: #f0fdf4; }
-        &.private { color: #ef4444;background: #fef2f2; }
+        &.public {
+          color: #10b981;
+          background: #f0fdf4;
+        }
+        &.private {
+          color: #ef4444;
+          background: #fef2f2;
+        }
       }
     }
   }
   .iconfont {
-    font-family: "iconfont" !important;
+    font-family: 'iconfont' !important;
     font-size: 28rpx;
     font-style: normal;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
-  .icon-check:before { 
-    content: "\e602"; 
-    color: #007aff; 
+  .icon-check:before {
+    content: '\e602';
+    color: #007aff;
     margin-left: 10rpx;
   }
 }

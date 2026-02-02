@@ -19,6 +19,7 @@
         :ref="'toolx' + itemKey"
         :data="item"
         :itemKey="itemKey"
+        :refresh="refresh"
       ></openTool>
       <image
         class="zfb-tk-avatar"
@@ -123,10 +124,17 @@
               v-if="item.messageType == '4'"
               @click="openVideo(returnParse(item.content).url)"
             >
-			<view>
-			                <video id="myVideo" :src="returnParse(item.content).url"
-			                    @error="videoErrorCallback" :danmu-list="danmuList" enable-danmu danmu-btn controls></video>
-			            </view>
+              <view>
+                <video
+                  id="myVideo"
+                  :src="returnParse(item.content).url"
+                  @error="videoErrorCallback"
+                  :danmu-list="danmuList"
+                  enable-danmu
+                  danmu-btn
+                  controls
+                ></video>
+              </view>
               <!-- <image
                 class="zfb-tk-item-c-img"
                 :src="returnParse(item.content).url"
@@ -162,8 +170,8 @@
             <view v-if="showTrs" class="zfb-tk-item-c-VOICE-tras-text"
               >{{ returnParse(item.content).text }}
             </view>
-            <view class="zfb-tk-time" v-if="item.time">{{
-              timeDetia(item.time)
+            <view class="zfb-tk-time" v-if="item.createdAt">{{
+              timeDetia(item.createdAt)
             }}</view>
           </view>
         </view>
@@ -189,6 +197,9 @@ export default {
   },
   props: {
     type: {
+      type: String
+    },
+    refresh: {
       type: String
     },
     avatar: {

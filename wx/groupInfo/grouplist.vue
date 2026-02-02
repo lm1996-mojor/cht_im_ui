@@ -1,111 +1,124 @@
 <template>
-	<view class="bgColor">
-		<watermark></watermark>
-		<view class="wxgrouplist">
-			<view class="wxgrouplist-item" v-for="(v,i) in list" :key="i" @click="goGroup(v)">
-				<view class="wxgrouplist-imgs">
-					<image v-for="(item,index) in JSON.parse(v.avatar)" :src="item>0?`../../static/img/avatar/avatar${item}.jpg`:item" mode="aspectFill"></image>
-				</view>
-				<view class="wxgrouplist-title">{{v.name}}</view>
-			</view>
-		</view>
-	</view>
+  <view class="bgColor">
+    <view class="wxgrouplist">
+      <view
+        class="wxgrouplist-item"
+        v-for="(v, i) in list"
+        :key="i"
+        @click="goGroup(v)"
+      >
+        <view class="wxgrouplist-imgs">
+          <image
+            v-for="(item, index) in JSON.parse(v.avatar)"
+            :src="item > 0 ? `../../static/img/avatar/avatar${item}.jpg` : item"
+            mode="aspectFill"
+          ></image>
+        </view>
+        <view class="wxgrouplist-title">{{ v.name }}</view>
+      </view>
+    </view>
+  </view>
 </template>
 
 <script>
-	export default {
-		data() {
-			return {
-				list: []
-			};
-		},
-		computed: {},
-		onLoad(e) {},
-		onShow() {
-			this.getlist();
-		},
-		methods: {
-			goGroup(e) {
-				let obj = {
-					userId: e.groupId,
-					windowType: "GROUP",
-					portrait: JSON.stringify(e.portrait)
-				}
-				uni.navigateTo({
-					url: '../chatWindow/index?conversationsId='+e.id+'&conversationsType=2'+'&groupId='+e.id
-					// url: '../chatWindow/index?userId=' + this.userId + '&conversationsId=' + e.conversationsId
-					// url: '../chatWindow/index?data=' + encodeURIComponent(JSON.stringify(obj))
-				})
-			},
-			getlist(e) {
-				this.$http.request({
-					url: '/chat_im/group/list',
-					success: res => {
-						if (res.data.code == 200) {
-							this.list = res?.data?.data?.content || [];
-						}
-					}
-				});
-			}
-		}
-	};
+export default {
+  data() {
+    return {
+      list: []
+    }
+  },
+  computed: {},
+  onLoad(e) {},
+  onShow() {
+    this.getlist()
+  },
+  methods: {
+    goGroup(e) {
+      let obj = {
+        userId: e.groupId,
+        windowType: 'GROUP',
+        portrait: JSON.stringify(e.portrait)
+      }
+      uni.navigateTo({
+        url:
+          '../chatWindow/index?conversationsId=' +
+          e.id +
+          '&conversationsType=2' +
+          '&groupId=' +
+          e.id
+        // url: '../chatWindow/index?userId=' + this.userId + '&conversationsId=' + e.conversationsId
+        // url: '../chatWindow/index?data=' + encodeURIComponent(JSON.stringify(obj))
+      })
+    },
+    getlist(e) {
+      this.$http.request({
+        url: '/chat_im/group/list',
+        success: res => {
+          if (res.data.code == 200) {
+            this.list = res?.data?.data?.content || []
+          }
+        }
+      })
+    }
+  }
+}
 </script>
 
 <style scoped>
-	/* #ifdef APP-PLUS */
-	.bgColor {
-		position: fixed;
-		top: 0;
-		left: 0;
-		right: 0;
-		bottom: 0;
-		background: #ededed;
-		overflow: auto;
-	}
+/* #ifdef APP-PLUS */
+.bgColor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #ededed;
+  overflow: auto;
+}
 
-	/* #endif */
-	/* #ifdef H5 */
-	page {
-		background: #ededed;
-	}
+/* #endif */
+/* #ifdef H5 */
+page {
+  background: #ededed;
+}
 
-	/* #endif */
-	.wxgrouplist {
-		display: flex;
-		flex-direction: column;
-	}
+/* #endif */
+.wxgrouplist {
+  display: flex;
+  flex-direction: column;
+}
 
-	.wxgrouplist-item {
-		padding: 0 28rpx;
-		background-color: #fff;
-		display: flex;
-		flex-direction: row;
-		align-items: center;
-	}
+.wxgrouplist-item {
+  padding: 0 28rpx;
+  background-color: #fff;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
 
-	.wxgrouplist-imgs {
-		width: 80rpx;
-		height: 80rpx;
-		border-radius: 12rpx;
-		overflow: hidden;
-		display: flex;
-		flex-direction: row;
-		flex-wrap: wrap;
-		background-color: #DEDEDE;
-	}
+.wxgrouplist-imgs {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 12rpx;
+  overflow: hidden;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  background-color: #dedede;
+}
 
-	.wxgrouplist-imgs image {
-		margin: 2rpx;
-		width: 36rpx;
-		height: 36rpx;
-	}
+.wxgrouplist-imgs image {
+  margin: 2rpx;
+  width: 36rpx;
+  height: 36rpx;
+}
 
-	.wxgrouplist-title {
-		flex: 1;
-		border-bottom: 1px #F4F4F4 solid;
-		font-size: 32rpx;
-		color: #333;
-		line-height: 105rpx;
-		margin-left: 38rpx;
-	}
+.wxgrouplist-title {
+  flex: 1;
+  border-bottom: 1px #f4f4f4 solid;
+  font-size: 32rpx;
+  color: #333;
+  line-height: 105rpx;
+  margin-left: 38rpx;
+}
 </style>

@@ -1,1062 +1,1210 @@
 <template>
-	<view>
-		<watermark></watermark>
-		<uni-popup ref="popup" type="center">
-			<view class="popsendCard" :style="'height:' + windowHeight + 'px'">
-				<sendCard @click="sendCardclick"></sendCard>
-			</view>
-		</uni-popup>
-		<uni-popup ref="popupfavorites" type="center" background-color="#fff" style="background-color: #fff;">
-			<scroll-view scroll-y :style="'height:' + windowHeight + 'px'">
-				<favorites type="2" @clickitem="clickitem"></favorites>
-			</scroll-view>
-		</uni-popup>
-		<view class="zfb-tk-main">
-			<uni-list class="zfb-tk-conent" :border="false" style="background: none;">
-				<view v-for="(v, index) in chatWindowData.messages" :key="'key' + index">
-				<chatItem  :talkTo="talkTo"
-					:itemKey="index" :item="v" :avatar="userInfo.avatar"
-					:type="v.fromUserId==userInfo.id?'right':'left'" @tryagin="tryagin" @longpressItem="longpressItem"
-					:longTapItemKey="longTapItemKey">
-				</chatItem>
-				</view>
-			</uni-list>
-			<view class="autodownView"></view>
-		</view>
-		<view :style="'height: ' + keyboardHeight + 'px'"></view>
-		<view v-if="showtool || showEmojitool" :style="'height:558rpx'"></view>
-		<view class="zfb-tk-send-tool" :style="'transform: translateY(-' + keyboardHeight + 'px)'">
-			<view class="zfb-tk-send-tool-c">
-				<view class="zfb-tk-send-tool-icon wxfont" @click="changeShowVice"
-					:class="showVice ? 'jianpan' : 'yuyin2'"></view>
-				<view class="zfb-tk-send-tool-vioce" v-if="showVice">
-					<view class="zfb-tk-send-tool-vioce-item" @longpress="startRecord" @touchend="endRecord">按住说话</view>
-				</view>
-				<view v-else class="zfb-tk-send-tool-input-box" @click="msgFocus = true"><textarea
-						@focus="showtool = false" :focus="msgFocus" class="zfb-tk-send-tool-input"
-						:adjust-position="false" v-model="msg" placeholder="" hold-keyboard confirm-type="send"
-						@confirm="sendMsg(msg, 'TEXT')" :maxlength="-1" auto-height /></view>
-				<view @click="changeEmojiTool" class="zfb-tk-send-tool-more wxfont biaoqing"></view>
-				<view v-if="msg !== ''" class="zfb-tk-send-tool-text" @touchend.prevent="sendMsg(msg, 'TEXT')"
-					:style="{ background: msg !== '' ? '#1BC418' : '#F7F7F7', color: msg !== '' ? '#fff' : '#ddd', 'border-color': msg !== '' ? '#1BC418' : '#ddd' }">
-					发送</view>
-				<view v-else @click="changeTool" class="zfb-tk-send-tool-more wxfont gengduo"></view>
-			</view>
-			<view v-if="showtool" class="zfb-tk-send-tools">
-				<view class="zfb-tk-send-tools-item" v-for="(v, i) in toolist" @click="toolClick(v)">
-					<view class="zfb-tk-send-tools-icon">
-						<view class="wxfont" :class="v.icon"></view>
-					</view>
-					<view class="zfb-tk-send-tools-text">{{ v.title }}</view>
-				</view>
-			</view>
-			<scroll-view :scroll-y="true" v-if="showEmojitool" class="wxemojitool">
-				<view class="wxemojitool-content">
-					<view class="wxemojitool-item" @click="addMsg(v)" v-for="(v, i) in emojilist" :key="i">{{ v }}
-					</view>
-				</view>
-			</scroll-view>
-		</view>
-		<zmm-upload-image chooseType="chooseMedia" :show="false" ref="upload" @allComplete="upLoadallComplete"
-			@oneComplete="upLoadoneComplete"></zmm-upload-image>
-		<!-- #ifndef H5 -->
-		<view class="zfb-tk-recorder" v-show="showRecorder"><zmm-recorder :show="showRecorder" ref="rec"
-				@recorderStop="recorderStop"></zmm-recorder></view>
-			<!-- #endif -->
-	</view>
+  <view>
+    <uni-popup ref="popup" type="center">
+      <view class="popsendCard" :style="'height:' + windowHeight + 'px'">
+        <sendCard @click="sendCardclick"></sendCard>
+      </view>
+    </uni-popup>
+    <uni-popup
+      ref="popupfavorites"
+      type="center"
+      background-color="#fff"
+      style="background-color: #fff"
+    >
+      <scroll-view scroll-y :style="'height:' + windowHeight + 'px'">
+        <favorites type="2" @clickitem="clickitem"></favorites>
+      </scroll-view>
+    </uni-popup>
+    <view class="zfb-tk-main">
+      <uni-list class="zfb-tk-conent" :border="false" style="background: none">
+        <view
+          v-for="(v, index) in chatWindowData.messages"
+          :key="'key' + index"
+        >
+          <chatItem
+            :talkTo="talkTo"
+            :itemKey="index"
+            :item="v"
+            :avatar="v.fromUserAvatar"
+            :type="v.fromUserId == userInfo.id ? 'right' : 'left'"
+            @tryagin="tryagin"
+            @longpressItem="longpressItem"
+            :longTapItemKey="longTapItemKey"
+            :refresh="getChatList"
+          >
+          </chatItem>
+        </view>
+      </uni-list>
+      <view class="autodownView"></view>
+    </view>
+    <view :style="'height: ' + keyboardHeight + 'px'"></view>
+    <view v-if="showtool || showEmojitool" :style="'height:558rpx'"></view>
+    <view
+      class="zfb-tk-send-tool"
+      :style="'transform: translateY(-' + keyboardHeight + 'px)'"
+    >
+      <view class="zfb-tk-send-tool-c">
+        <view
+          class="zfb-tk-send-tool-icon wxfont"
+          @click="changeShowVice"
+          :class="showVice ? 'jianpan' : 'yuyin2'"
+        ></view>
+        <view class="zfb-tk-send-tool-vioce" v-if="showVice">
+          <view
+            class="zfb-tk-send-tool-vioce-item"
+            @longpress="startRecord"
+            @touchend="endRecord"
+            >按住说话</view
+          >
+        </view>
+        <view
+          v-else
+          class="zfb-tk-send-tool-input-box"
+          @click="msgFocus = true"
+        >
+          <textarea
+            @focus="showtool = false"
+            :focus="msgFocus"
+            class="zfb-tk-send-tool-input"
+            :adjust-position="false"
+            v-model="msg"
+            placeholder=""
+            hold-keyboard
+            confirm-type="send"
+            @confirm="sendMsg(msg, 'TEXT')"
+            :maxlength="-1"
+            auto-height
+          />
+        </view>
+        <view
+          @click="changeEmojiTool"
+          class="zfb-tk-send-tool-more wxfont biaoqing"
+        ></view>
+        <view
+          v-if="msg !== ''"
+          class="zfb-tk-send-tool-text"
+          @touchend.prevent="sendMsg(msg, 'TEXT')"
+          :style="{
+            background: msg !== '' ? '#1BC418' : '#F7F7F7',
+            color: msg !== '' ? '#fff' : '#ddd',
+            'border-color': msg !== '' ? '#1BC418' : '#ddd'
+          }"
+        >
+          发送</view
+        >
+        <view
+          v-else
+          @click="changeTool"
+          class="zfb-tk-send-tool-more wxfont gengduo"
+        ></view>
+      </view>
+      <view v-if="showtool" class="zfb-tk-send-tools">
+        <view
+          class="zfb-tk-send-tools-item"
+          v-for="(v, i) in toolist"
+          @click="toolClick(v)"
+        >
+          <view class="zfb-tk-send-tools-icon">
+            <view class="wxfont" :class="v.icon"></view>
+          </view>
+          <view class="zfb-tk-send-tools-text">{{ v.title }}</view>
+        </view>
+      </view>
+      <scroll-view :scroll-y="true" v-if="showEmojitool" class="wxemojitool">
+        <view class="wxemojitool-content">
+          <view
+            class="wxemojitool-item"
+            @click="addMsg(v)"
+            v-for="(v, i) in emojilist"
+            :key="i"
+            >{{ v }}
+          </view>
+        </view>
+      </scroll-view>
+    </view>
+    <zmm-upload-image
+      chooseType="chooseMedia"
+      :show="false"
+      ref="upload"
+      @allComplete="upLoadallComplete"
+      @oneComplete="upLoadoneComplete"
+    ></zmm-upload-image>
+    <!-- #ifndef H5 -->
+    <view class="zfb-tk-recorder" v-show="showRecorder"
+      ><zmm-recorder
+        :show="showRecorder"
+        ref="rec"
+        @recorderStop="recorderStop"
+      ></zmm-recorder
+    ></view>
+    <!-- #endif -->
+  </view>
 </template>
 
 <script>
-	// #ifdef APP-PLUS
-	const TUICalling = uni.requireNativePlugin('TUICallingUniPlugin-TUICallingModule');
-	// #endif
-	let observer = null;
-	import favorites from '../favorites/index.vue';
-	import chatItem from './chat-item.vue';
-	import sendCard from './sendCard.vue';
-	export default {
-		components: {
-			chatItem,
-			sendCard,
-			favorites
-		},
-		data() {
-			return {
-				userId: '',
-				groupId:'',
-				conversationsId:'',
-				conversationsType:'',
-				userInfo: {},
-				isBottomHeight: '',
-				clickToSubmitSure: null,
-				autodown: true,
-				emojilist: ['😁', '😂', '😃', '😄', '😅', '😆', '😉', '😊', '😋', '😌', '😍', '😏', '😒', '😓', '😔', '😖',
-					'😘', '😚', '😜', '😝', '😞', '😠', '😡', '😢', '😣', '😤', '😥', '😨', '😩', '😪', '😫', '😭',
-					'😰', '😱', '😲', '😳', '😵', '😷', '😸', '😹', '😺', '😻', '😼', '😽', '😾', '😿', '🙀', '🙅',
-					'🙆', '🙇', '🙈', '🙉', '🙊', '🙋', '🙌', '🙍', '🙎', '🙏'
-				],
-				showRecorder: false,
-				showVice: false,
-				toolist: [{
-						title: '相册',
-						icon: 'tupian'
-					},
-					{
-						title: '拍摄',
-						icon: 'xiangji'
-					},
-					{
-						title: '位置',
-						icon: 'dingwei'
-					},
-					{
-						title: '语音',
-						icon: 'yrecord'
-					},
-					{
-						title: '名片',
-						icon: 'mingpian'
-					},
-					{
-						title: '收藏',
-						icon: 'shoucang'
-					}
-				],
-				msgFocus: false,
-				showtool: false,
-				showEmojitool: false,
-				msg: '',
-				timer: '',
-				talkTo: '',
-				keyboardHeight: 0,
-				windowHeight: 0,
-				longTapItemKey: '',
-				chatWindowData: [],
-				localData: {},
-				showtitleNViewBtns: true
-			};
-		},
-		computed: {
-			userinfo() {
-				return this.$store.state.userInfo;
-			},
-			chatListInfo() {
-				return this.$store.state.chatlist[this.talkTo.userId];
-			},
-			chatDataState() {
-				return this.$store.state.chatDataState;
-			},
-			chatDataUserId() {
-				return this.$store.state.chatDataUserId;
-			},
-			// chatWindowData() {
-			// 	// this.$store.dispatch('getchatDatalist');
-			// 	if (this.$store.state.chatDatalist[this.talkTo.userId]) {
-			// 		return this.$store.state.chatDatalist[this.talkTo.userId].list;
-			// 	}
-			// }
-		},
-		watch: {
-			chatDataState: {
-				deep: true,
-				immediate: true,
-				handler(v) {
-					if (this.chatDataUserId == this.talkTo.userId) {
-						this.scrolltoBottom();
-						this.clickToSubmitSure();
-					}
-				}
-			},
-			keyboardHeight: {
-				deep: true,
-				immediate: true,
-				handler(v) {
-					if (v > 0) {
-						this.showEmojitool = false;
-					}
-				}
-			}
-		},
-		onLoad(e) {
-			this.userId = e.userId;
-			this.conversationsId = e.conversationsId;
-			this.conversationsType = e.conversationsType;
-			this.groupId = e.groupId;
-			this.userInfo = uni.getStorageSync('userInfo');
-			this.getChatList();
-			// var stringdata = decodeURIComponent(e.data);
-			// var data = JSON.parse(stringdata);
-			// this.talkTo = data;
-			// this.$store.commit('update_TalkToData',this.talkTo)
-			// // 根据Id
-			// this.$store
-			// 	.dispatch('createChatObj', {
-			// 		userId: this.talkTo.userId,
-			// 		windowType: this.talkTo.windowType
-			// 	})
-			// 	.then(res => {
-			// 		this.localData = res.data;
-			// 		if (data.windowType == 'SINGLE') {
-			// 			uni.setNavigationBarTitle({
-			// 				title: this.localData.fromInfo.nickName
-			// 			});
-			// 		}
-			// 		this.$store.dispatch('getchatDatalist');
-			// 		this.$store.dispatch('getChatList');
-			// 		if (this.localData.fromInfo && this.localData.fromInfo.userType == 'normal') {
-			// 			this.toolist.push({
-			// 				title: '音视频',
-			// 				icon: 'yspin'
-			// 			});
-			// 		} else {
-			// 			this.$fc.setTitleNViewBtns(0, '');
-			// 			this.showtitleNViewBtns = false;
-			// 		}
-			// 		if (this.localData.groupInfo && this.localData.groupInfo.userId) {
-			// 			this.$fc.setTitleNViewBtns(0, '\ue623');
-			// 			this.showtitleNViewBtns = true;
-			// 		}
-			// 		this.scrolltoBottom();
-			// 	});
-			// this.clickToSubmitSure = this.$fc.debounce(
-			// 	() => {
-			// 		observer = uni.createIntersectionObserver(this);
-			// 		observer.relativeTo('.zfb-tk-main').observe('.autodownView', res => {
-			// 			var isBottomH = res.intersectionRect.top + res.intersectionRect.height;
-			// 			if (!this.isBottomHeight) {
-			// 				this.isBottomHeight = res.relativeRect.height + res.relativeRect.top - 56;
-			// 			}
+// #ifdef APP-PLUS
+const TUICalling = uni.requireNativePlugin(
+  'TUICallingUniPlugin-TUICallingModule'
+)
+// #endif
+let observer = null
+import favorites from '../favorites/index.vue'
+import chatItem from './chat-item.vue'
+import sendCard from './sendCard.vue'
+export default {
+  components: {
+    chatItem,
+    sendCard,
+    favorites
+  },
+  data() {
+    return {
+      userId: '',
+      groupId: '',
+      conversationsId: '',
+      conversationsType: '',
+      userInfo: {},
+      isBottomHeight: '',
+      clickToSubmitSure: null,
+      autodown: true,
+      emojilist: [
+        '😁',
+        '😂',
+        '😃',
+        '😄',
+        '😅',
+        '😆',
+        '😉',
+        '😊',
+        '😋',
+        '😌',
+        '😍',
+        '😏',
+        '😒',
+        '😓',
+        '😔',
+        '😖',
+        '😘',
+        '😚',
+        '😜',
+        '😝',
+        '😞',
+        '😠',
+        '😡',
+        '😢',
+        '😣',
+        '😤',
+        '😥',
+        '😨',
+        '😩',
+        '😪',
+        '😫',
+        '😭',
+        '😰',
+        '😱',
+        '😲',
+        '😳',
+        '😵',
+        '😷',
+        '😸',
+        '😹',
+        '😺',
+        '😻',
+        '😼',
+        '😽',
+        '😾',
+        '😿',
+        '🙀',
+        '🙅',
+        '🙆',
+        '🙇',
+        '🙈',
+        '🙉',
+        '🙊',
+        '🙋',
+        '🙌',
+        '🙍',
+        '🙎',
+        '🙏'
+      ],
+      showRecorder: false,
+      showVice: false,
+      toolist: [
+        {
+          title: '相册',
+          icon: 'tupian'
+        },
+        {
+          title: '拍摄',
+          icon: 'xiangji'
+        },
+        {
+          title: '位置',
+          icon: 'dingwei'
+        },
+        {
+          title: '语音',
+          icon: 'yrecord'
+        },
+        {
+          title: '名片',
+          icon: 'mingpian'
+        },
+        {
+          title: '收藏',
+          icon: 'shoucang'
+        }
+      ],
+      msgFocus: false,
+      showtool: false,
+      showEmojitool: false,
+      msg: '',
+      timer: '',
+      talkTo: '',
+      keyboardHeight: 0,
+      windowHeight: 0,
+      longTapItemKey: '',
+      chatWindowData: [],
+      localData: {},
+      showtitleNViewBtns: true
+    }
+  },
+  computed: {
+    userinfo() {
+      return this.$store.state.userInfo
+    },
+    chatListInfo() {
+      return this.$store.state.chatlist[this.talkTo.userId]
+    },
+    chatDataState() {
+      return this.$store.state.chatDataState
+    },
+    chatDataUserId() {
+      return this.$store.state.chatDataUserId
+    }
+    // chatWindowData() {
+    // 	// this.$store.dispatch('getchatDatalist');
+    // 	if (this.$store.state.chatDatalist[this.talkTo.userId]) {
+    // 		return this.$store.state.chatDatalist[this.talkTo.userId].list;
+    // 	}
+    // }
+  },
+  watch: {
+    chatDataState: {
+      deep: true,
+      immediate: true,
+      handler(v) {
+        if (this.chatDataUserId == this.talkTo.userId) {
+          this.scrolltoBottom()
+          this.clickToSubmitSure()
+        }
+      }
+    },
+    keyboardHeight: {
+      deep: true,
+      immediate: true,
+      handler(v) {
+        if (v > 0) {
+          this.showEmojitool = false
+        }
+      }
+    }
+  },
+  onLoad(e) {
+    this.userId = e.userId
+    this.conversationsId = e.conversationsId
+    this.conversationsType = e.conversationsType
+    this.groupId = e.groupId
+    this.userInfo = uni.getStorageSync('userInfo')
+    this.getChatList()
+    // var stringdata = decodeURIComponent(e.data);
+    // var data = JSON.parse(stringdata);
+    // this.talkTo = data;
+    // this.$store.commit('update_TalkToData',this.talkTo)
+    // // 根据Id
+    // this.$store
+    // 	.dispatch('createChatObj', {
+    // 		userId: this.talkTo.userId,
+    // 		windowType: this.talkTo.windowType
+    // 	})
+    // 	.then(res => {
+    // 		this.localData = res.data;
+    // 		if (data.windowType == 'SINGLE') {
+    // 			uni.setNavigationBarTitle({
+    // 				title: this.localData.fromInfo.nickName
+    // 			});
+    // 		}
+    // 		this.$store.dispatch('getchatDatalist');
+    // 		this.$store.dispatch('getChatList');
+    // 		if (this.localData.fromInfo && this.localData.fromInfo.userType == 'normal') {
+    // 			this.toolist.push({
+    // 				title: '音视频',
+    // 				icon: 'yspin'
+    // 			});
+    // 		} else {
+    // 			this.$fc.setTitleNViewBtns(0, '');
+    // 			this.showtitleNViewBtns = false;
+    // 		}
+    // 		if (this.localData.groupInfo && this.localData.groupInfo.userId) {
+    // 			this.$fc.setTitleNViewBtns(0, '\ue623');
+    // 			this.showtitleNViewBtns = true;
+    // 		}
+    // 		this.scrolltoBottom();
+    // 	});
+    // this.clickToSubmitSure = this.$fc.debounce(
+    // 	() => {
+    // 		observer = uni.createIntersectionObserver(this);
+    // 		observer.relativeTo('.zfb-tk-main').observe('.autodownView', res => {
+    // 			var isBottomH = res.intersectionRect.top + res.intersectionRect.height;
+    // 			if (!this.isBottomHeight) {
+    // 				this.isBottomHeight = res.relativeRect.height + res.relativeRect.top - 56;
+    // 			}
 
-			// 			if (parseInt(isBottomH) < parseInt(this.isBottomHeight) + 40) {
-			// 				this.autodown = true;
-			// 			} else {
-			// 				this.autodown = false;
-			// 			}
-			// 		});
-			// 	},
-			// 	100,
-			// 	false
-			// );
-		},
-		onPageScroll() {
-			this.clickToSubmitSure();
-		},
-		onReady() {},
-		onShow() {
-			//标记会话已读
-			this.readed();
-			// ========== ✅ 监听全局推送消息 (核心) ==========
-			this.socketPush = uni.$on('onSocketPush', (pushData) => {
-				console.log('当前页面收到推送：', pushData);
-				
-				if(pushData.op==0) return
-				// 根据消息的type，处理不同的业务逻辑 (按你的后端定义的type来)
-				this.getChatList(pushData);
-			})
-			if (this.chatListInfo && this.chatListInfo.nickName) {
-				uni.setNavigationBarTitle({
-					title: this.chatListInfo.nickName
-				});
-			}
-		},
-		mounted() {
-			// #ifdef APP-PLUS
-			uni.onKeyboardHeightChange(res => {
-				this.keyboardHeight = res.height;
-			});
-			// #endif
-		},
-		onUnload() {
-					// ========== ✅ 页面销毁时移除监听，避免内存泄漏 (必写！) ==========
-			uni.$off('onSocketPush', this.socketPush);
-			if (observer) {
-				observer.disconnect();
-			}
-			if (this.chatListInfo) {
-				this.chatListInfo.num = 0;
-				this.$store.dispatch('updateChatListInfoById', {
-					userId: this.talkTo.userId,
-					data: this.chatListInfo
-				});
-			}
-		},
-		methods: {
-			readed(){
-				this.$http.request({
-					url: '/chat_im/conversations/read',
-					method: 'PUT',
-					data: JSON.stringify({
-						conversationId:this.conversationsId
-					}),
-					success: res => {
-						if (res.data.code == '200') {
-							//
-						}
-					}
-				});
-			},
-			addMsg(e) {
-				this.msg += e;
-			},
-			clickitem(e, i) {
-				//发送收藏
-				this.sendMsg(e.content, e.collectType);
-				this.closepopup('popupfavorites');
-			},
-			longpressItem(e, i) {
-				this.longTapItemKey = i;
-			},
-			startRecord() {
-				this.$refs['rec'].startRecord();
-				this.showRecorder = true;
-			},
-			endRecord() {
-				this.$refs['rec'].stopRecord();
-			},
-			recorderStop(e) {
-				uni.showLoading({
-					title: '发送中'
-				});
-				this.$http.uploadFile({
-					url: '/file/uploadAudio',
-					filePath: e.recordFilePath,
-					name: 'file',
-					fileType: 'audio',
-					success: res => {
-						var data = JSON.parse(res.data);
-						if (data.code == 200) {
-							var msg = {
-								time: e.recordTime,
-								url: data.data.fullPath,
-								text: data.data.sourceText
-							};
-							this.sendMsg(JSON.stringify(msg), 'VOICE');
-						}
-					}
-				});
-				this.$refs['rec'].clear(); //清理录音
-				// 隐藏语音组件
-				this.showRecorder = false;
-				// this.showtool=false
-			},
-			changeShowVice() {
-				this.showVice = !this.showVice;
-			},
-			upLoadoneComplete(e,type,filehouzhui) {
-				let t=2//图片
-				if(filehouzhui){
-					t=4//视频
-				}
-				this.sendMsg(JSON.stringify(e), t);
-			},
-			upLoadallComplete(e) {
-				// this.sendMsg(JSON.stringify(e),'IMAGE')
-			},
-			changeEmojiTool() {
-				this.showEmojitool = !this.showEmojitool;
-				this.showtool = false;
-			},
-			changeTool() {
-				this.showtool = !this.showtool;
-				this.showEmojitool = false;
-			},
-			sendCardclick(e) {
-				this.$refs.popup.close();
-				this.sendMsg(JSON.stringify(e.item.data), 'CARD');
-			},
-			open() {
-				uni.getSystemInfo({
-					success: res => {
-						this.windowHeight = res.windowHeight;
-					}
-				});
-				this.$refs.popup.open('top');
-			},
-			closepopup(e) {
-				this.$refs[e].close();
-			},
-			openpopup(e) {
-				this.$refs[e].open('top');
-			},
-			tryagin(e, i) {
-				//重新发送
-				this.chatWindowData.splice(i, 1);
-				this.chatWindowData.splice(i, 1);
-				this.$store.dispatch('updateChatById', {
-					userId: this.talkTo.userId,
-					data: this.chatWindowData
-				});
-				this.$nextTick(() => {
-					this.sendMsg(e.content, e.msgType);
-				});
-			},
-			sendVoiceCall() {
-				//发起语音
-				uni.showLoading({
-					title: '发起语音通话'
-				});
-				var formdata = {
-					userId: this.talkTo.userId,
-					msgType: 'TRTC_VOICE_START',
-					content: 'TRTC_VOICE_START'
-				};
-				this.$http.request({
-					url: '/chat/sendMsg',
-					method: 'POST',
-					data: JSON.stringify(formdata),
-					success: res => {
-						if (res.data.code == '200') {
-							if (res.data.data.status !== '0') {
-								uni.showToast({
-									title: res.data.data.statusLabel,
-									icon: 'none'
-								});
-								return;
-							}
-							var userInfo = res.data.data.userInfo;
-							var data = {
-								userId: userInfo.userId,
-								trtcId: userInfo.trtcId,
-								nickName: userInfo.nickName,
-								portrait: userInfo.portrait,
-								startTime: new Date().getTime(),
-								type: 'audio'
-							};
-							uni.setStorage({
-								key: 'call',
-								data: JSON.stringify(data),
-								success: function() {
-									TUICalling.call({
-										userID: userInfo.trtcId,
-										type: 1
-									});
-								}
-							});
-						}
-					}
-				});
-			},
-			sendVideoCall() {
-				//发起视频
-				uni.showLoading({
-					title: '发起视频通话'
-				});
-				var formdata = {
-					userId: this.talkTo.userId,
-					msgType: 'TRTC_VIDEO_START',
-					content: 'TRTC_VIDEO_START'
-				};
-				this.$http.request({
-					url: '/chat/sendMsg',
-					method: 'POST',
-					data: JSON.stringify(formdata),
-					success: res => {
-						if (res.data.code == '200') {
-							if (res.data.data.status !== '0') {
-								uni.showToast({
-									title: res.data.data.statusLabel,
-									icon: 'none'
-								});
-								return;
-							}
-							var userInfo = res.data.data.userInfo;
-							var data = {
-								userId: userInfo.userId,
-								trtcId: userInfo.trtcId,
-								nickName: userInfo.nickName,
-								portrait: userInfo.portrait,
-								startTime: new Date().getTime(),
-								type: 'video'
-							};
-							uni.setStorage({
-								key: 'call',
-								data: JSON.stringify(data),
-								success: function() {
-									TUICalling.call({
-										userID: userInfo.trtcId,
-										type: 2
-									});
-								}
-							});
-						}
-					}
-				});
-			},
-			toolClick(e) {
-				switch (e.title) {
-					case '位置':
-						uni.chooseLocation({
-							success: res => {
-								this.sendMsg(JSON.stringify(res), 'LOCATION');
-							}
-						});
-						break;
-					case '相册':
-						this.$refs['upload'].chooseTap();
-						break;
-					case '语音':
-						this.startRecord();
-						break;
-					case '名片':
-						this.open();
-						break;
-					case '音视频':
-						uni.showActionSheet({
-							itemList: ['视频通话', '语音通话'],
-							success: res => {
-								switch (res.tapIndex) {
-									case 0:
-										this.sendVideoCall();
-										break;
-									case 1:
-										this.sendVoiceCall();
-										break;
-									default:
-										break;
-								}
-							}
-						});
-						break;
-					case '收藏':
-						this.openpopup('popupfavorites');
-						uni.getSystemInfo({
-							success: res => {
-								// #ifdef APP-PLUS
-								this.windowHeight = res.windowHeight - res.statusBarHeight - res.safeArea.top -
-									res.safeAreaInsets.top;
-								// #endif
-								// #ifndef APP-PLUS
-								this.windowHeight = res.windowHeight;
-								// #endif
-							}
-						});
-						break;
-					case '拍摄':
-						// #ifdef APP-PLUS
-						var _this = this;
-						uni.showActionSheet({
-							itemList: ['拍摄图片', '拍摄视频'],
-							success: res => {
-								switch (res.tapIndex) {
-									case 0:
-										getImage();
-										break;
-									case 1:
-										getVideo();
-										break;
-									default:
-										break;
-								}
-							},
-							fail: function(res) {
-								console.log(res.errMsg);
-							}
-						});
+    // 			if (parseInt(isBottomH) < parseInt(this.isBottomHeight) + 40) {
+    // 				this.autodown = true;
+    // 			} else {
+    // 				this.autodown = false;
+    // 			}
+    // 		});
+    // 	},
+    // 	100,
+    // 	false
+    // );
+  },
+  onPageScroll() {
+    this.clickToSubmitSure()
+  },
+  onReady() {},
+  onShow() {
+    //标记会话已读
+    this.readed()
+    // ========== ✅ 监听全局推送消息 (核心) ==========
+    this.socketPush = uni.$on('onSocketPush', pushData => {
+      console.log('当前页面收到推送：', pushData)
 
-						function getImage() {
-							//拍照事件
-							var cmr = plus.camera.getCamera();
-							cmr.captureImage(
-								function(p) {
-									plus.io.resolveLocalFileSystemURL(
-										p,
-										function(entry) {
-											//读取图片信息
-											compressImage(entry.toLocalURL(), entry.name); //压缩图片
-										},
-										function(e) {
-											console.log('读取拍照文件错误：' + e.message);
-										}
-									);
-								},
-								function(e) {
-									console.log(e);
-								}, {
-									filename: 'file:///storage/emulated/0/Documents/weiliao/'
-								}
-							);
-						}
+      if (pushData.op == 0) return
+      // 根据消息的type，处理不同的业务逻辑 (按你的后端定义的type来)
+      this.getChatList(pushData)
+    })
+    if (this.chatListInfo && this.chatListInfo.nickName) {
+      uni.setNavigationBarTitle({
+        title: this.chatListInfo.nickName
+      })
+    }
+  },
+  mounted() {
+    // #ifdef APP-PLUS
+    uni.onKeyboardHeightChange(res => {
+      this.keyboardHeight = res.height
+    })
+    // #endif
+  },
+  onUnload() {
+    // ========== ✅ 页面销毁时移除监听，避免内存泄漏 (必写！) ==========
+    uni.$off('onSocketPush', this.socketPush)
+    if (observer) {
+      observer.disconnect()
+    }
+    if (this.chatListInfo) {
+      this.chatListInfo.num = 0
+      this.$store.dispatch('updateChatListInfoById', {
+        userId: this.talkTo.userId,
+        data: this.chatListInfo
+      })
+    }
+  },
+  methods: {
+    readed() {
+      this.$http.request({
+        url: '/chat_im/conversations/read',
+        method: 'PUT',
+        data: JSON.stringify({
+          conversationId: this.conversationsId
+        }),
+        success: res => {
+          if (res.data.code == '200') {
+            //
+          }
+        }
+      })
+    },
+    addMsg(e) {
+      this.msg += e
+    },
+    clickitem(e, i) {
+      //发送收藏
+      this.sendMsg(e.content, e.collectType)
+      this.closepopup('popupfavorites')
+    },
+    longpressItem(e, i) {
+      this.longTapItemKey = i
+    },
+    startRecord() {
+      this.$refs['rec'].startRecord()
+      this.showRecorder = true
+    },
+    endRecord() {
+      this.$refs['rec'].stopRecord()
+    },
+    recorderStop(e) {
+      uni.showLoading({
+        title: '发送中'
+      })
+      this.$http.uploadFile({
+        url: '/file/uploadAudio',
+        filePath: e.recordFilePath,
+        name: 'file',
+        fileType: 'audio',
+        success: res => {
+          var data = JSON.parse(res.data)
+          if (data.code == 200) {
+            var msg = {
+              time: e.recordTime,
+              url: data.data.fullPath,
+              text: data.data.sourceText
+            }
+            this.sendMsg(JSON.stringify(msg), 'VOICE')
+          }
+        }
+      })
+      this.$refs['rec'].clear() //清理录音
+      // 隐藏语音组件
+      this.showRecorder = false
+      // this.showtool=false
+    },
+    changeShowVice() {
+      this.showVice = !this.showVice
+    },
+    upLoadoneComplete(e, type, filehouzhui) {
+      let t = 2 //图片
+      if (filehouzhui) {
+        t = 4 //视频
+      }
+      this.sendMsg(JSON.stringify(e), t)
+    },
+    upLoadallComplete(e) {
+      // this.sendMsg(JSON.stringify(e),'IMAGE')
+    },
+    changeEmojiTool() {
+      this.showEmojitool = !this.showEmojitool
+      this.showtool = false
+    },
+    changeTool() {
+      this.showtool = !this.showtool
+      this.showEmojitool = false
+    },
+    sendCardclick(e) {
+      this.$refs.popup.close()
+      this.sendMsg(JSON.stringify(e.item.data), 'CARD')
+    },
+    open() {
+      uni.getSystemInfo({
+        success: res => {
+          this.windowHeight = res.windowHeight
+        }
+      })
+      this.$refs.popup.open('top')
+    },
+    closepopup(e) {
+      this.$refs[e].close()
+    },
+    openpopup(e) {
+      this.$refs[e].open('top')
+    },
+    tryagin(e, i) {
+      //重新发送
+      this.chatWindowData.splice(i, 1)
+      this.chatWindowData.splice(i, 1)
+      this.$store.dispatch('updateChatById', {
+        userId: this.talkTo.userId,
+        data: this.chatWindowData
+      })
+      this.$nextTick(() => {
+        this.sendMsg(e.content, e.msgType)
+      })
+    },
+    sendVoiceCall() {
+      //发起语音
+      uni.showLoading({
+        title: '发起语音通话'
+      })
+      var formdata = {
+        userId: this.talkTo.userId,
+        msgType: 'TRTC_VOICE_START',
+        content: 'TRTC_VOICE_START'
+      }
+      this.$http.request({
+        url: '/chat/sendMsg',
+        method: 'POST',
+        data: JSON.stringify(formdata),
+        success: res => {
+          if (res.data.code == '200') {
+            if (res.data.data.status !== '0') {
+              uni.showToast({
+                title: res.data.data.statusLabel,
+                icon: 'none'
+              })
+              return
+            }
+            var userInfo = res.data.data.userInfo
+            var data = {
+              userId: userInfo.userId,
+              trtcId: userInfo.trtcId,
+              nickName: userInfo.nickName,
+              portrait: userInfo.portrait,
+              startTime: new Date().getTime(),
+              type: 'audio'
+            }
+            uni.setStorage({
+              key: 'call',
+              data: JSON.stringify(data),
+              success: function () {
+                TUICalling.call({
+                  userID: userInfo.trtcId,
+                  type: 1
+                })
+              }
+            })
+          }
+        }
+      })
+    },
+    sendVideoCall() {
+      //发起视频
+      uni.showLoading({
+        title: '发起视频通话'
+      })
+      var formdata = {
+        userId: this.talkTo.userId,
+        msgType: 'TRTC_VIDEO_START',
+        content: 'TRTC_VIDEO_START'
+      }
+      this.$http.request({
+        url: '/chat/sendMsg',
+        method: 'POST',
+        data: JSON.stringify(formdata),
+        success: res => {
+          if (res.data.code == '200') {
+            if (res.data.data.status !== '0') {
+              uni.showToast({
+                title: res.data.data.statusLabel,
+                icon: 'none'
+              })
+              return
+            }
+            var userInfo = res.data.data.userInfo
+            var data = {
+              userId: userInfo.userId,
+              trtcId: userInfo.trtcId,
+              nickName: userInfo.nickName,
+              portrait: userInfo.portrait,
+              startTime: new Date().getTime(),
+              type: 'video'
+            }
+            uni.setStorage({
+              key: 'call',
+              data: JSON.stringify(data),
+              success: function () {
+                TUICalling.call({
+                  userID: userInfo.trtcId,
+                  type: 2
+                })
+              }
+            })
+          }
+        }
+      })
+    },
+    toolClick(e) {
+      switch (e.title) {
+        case '位置':
+          uni.chooseLocation({
+            success: res => {
+              this.sendMsg(JSON.stringify(res), 'LOCATION')
+            }
+          })
+          break
+        case '相册':
+          this.$refs['upload'].chooseTap()
+          break
+        case '语音':
+          this.startRecord()
+          break
+        case '名片':
+          this.open()
+          break
+        case '音视频':
+          uni.showActionSheet({
+            itemList: ['视频通话', '语音通话'],
+            success: res => {
+              switch (res.tapIndex) {
+                case 0:
+                  this.sendVideoCall()
+                  break
+                case 1:
+                  this.sendVoiceCall()
+                  break
+                default:
+                  break
+              }
+            }
+          })
+          break
+        case '收藏':
+          this.openpopup('popupfavorites')
+          uni.getSystemInfo({
+            success: res => {
+              // #ifdef APP-PLUS
+              this.windowHeight =
+                res.windowHeight -
+                res.statusBarHeight -
+                res.safeArea.top -
+                res.safeAreaInsets.top
+              // #endif
+              // #ifndef APP-PLUS
+              this.windowHeight = res.windowHeight
+              // #endif
+            }
+          })
+          break
+        case '拍摄':
+          // #ifdef APP-PLUS
+          var _this = this
+          uni.showActionSheet({
+            itemList: ['拍摄图片', '拍摄视频'],
+            success: res => {
+              switch (res.tapIndex) {
+                case 0:
+                  getImage()
+                  break
+                case 1:
+                  getVideo()
+                  break
+                default:
+                  break
+              }
+            },
+            fail: function (res) {
+              console.log(res.errMsg)
+            }
+          })
 
-						function getVideo() {
-							//拍摄视频
-							var cmr = plus.camera.getCamera();
-							cmr.startVideoCapture(
-								function(p) {
-									plus.io.resolveLocalFileSystemURL(
-										p,
-										function(entry) {
-											//读取文件信息
-											compressVideo(entry.fullPath, entry.name); //压缩视频
-										},
-										function(e) {
-											console.log('读取视频文件错误：' + e.message);
-										}
-									);
-								},
-								function(e) {
-									console.log(e);
-								}, {
-									filename: 'file:///storage/emulated/0/Documents/weiliao/'
-								}
-							);
-						}
+          function getImage() {
+            //拍照事件
+            var cmr = plus.camera.getCamera()
+            cmr.captureImage(
+              function (p) {
+                plus.io.resolveLocalFileSystemURL(
+                  p,
+                  function (entry) {
+                    //读取图片信息
+                    compressImage(entry.toLocalURL(), entry.name) //压缩图片
+                  },
+                  function (e) {
+                    console.log('读取拍照文件错误：' + e.message)
+                  }
+                )
+              },
+              function (e) {
+                console.log(e)
+              },
+              {
+                filename: 'file:///storage/emulated/0/Documents/weiliao/'
+              }
+            )
+          }
 
-						function compressImage(url, filename) {
-							//压缩图片
-							var name = 'file:///storage/emulated/0/Documents/weiliao/' + filename;
-							plus.zip.compressImage({
-									src: url, //src: (String 类型 )压缩转换原始图片的路径
-									dst: name, //压缩转换目标图片的路径
-									quality: 60, //quality: (Number 类型 )压缩图片的质量.取值范围为1-100
-									overwrite: true //overwrite: (Boolean 类型 )覆盖生成新文件
-								},
-								function(e) {
-									//压缩后
-									// openFile(e.target)
-									uni.showLoading({
-										title: '发送中'
-									});
-									sendPhoto(e.target); //发送
-								},
-								function(error) {
-									console.log('压缩图片失败，请稍候再试');
-								}
-							);
-						}
+          function getVideo() {
+            //拍摄视频
+            var cmr = plus.camera.getCamera()
+            cmr.startVideoCapture(
+              function (p) {
+                plus.io.resolveLocalFileSystemURL(
+                  p,
+                  function (entry) {
+                    //读取文件信息
+                    compressVideo(entry.fullPath, entry.name) //压缩视频
+                  },
+                  function (e) {
+                    console.log('读取视频文件错误：' + e.message)
+                  }
+                )
+              },
+              function (e) {
+                console.log(e)
+              },
+              {
+                filename: 'file:///storage/emulated/0/Documents/weiliao/'
+              }
+            )
+          }
 
-						function compressVideo(url, filename) {
-							//压缩视频
-							// var name = 'file:///storage/emulated/0/Documents/weiliao/compress/' + filename;
-							plus.zip.compressVideo({
-									src: url, //src: (String 类型 )压缩转换原始路径
-									// filename: name, //压缩后的路径
-									quality: 'medium' //压缩级别low medium high
-								},
-								function(e) {
-									//压缩后
-									// openFile(e.tempFilePath)
-									uni.showLoading({
-										title: '发送中'
-									});
-									sendVideo(e.tempFilePath); //发送
-								},
-								function(error) {
-									console.log('压缩视频失败，请稍候再试');
-								}
-							);
-						}
+          function compressImage(url, filename) {
+            //压缩图片
+            var name =
+              'file:///storage/emulated/0/Documents/weiliao/' + filename
+            plus.zip.compressImage(
+              {
+                src: url, //src: (String 类型 )压缩转换原始图片的路径
+                dst: name, //压缩转换目标图片的路径
+                quality: 60, //quality: (Number 类型 )压缩图片的质量.取值范围为1-100
+                overwrite: true //overwrite: (Boolean 类型 )覆盖生成新文件
+              },
+              function (e) {
+                //压缩后
+                // openFile(e.target)
+                uni.showLoading({
+                  title: '发送中'
+                })
+                sendPhoto(e.target) //发送
+              },
+              function (error) {
+                console.log('压缩图片失败，请稍候再试')
+              }
+            )
+          }
 
-						function openFile(filePath) {
-							//打开文件
-							let system = uni.getSystemInfoSync().platform;
-							if (system == 'ios') {
-								filePath = encodeURI(filePath);
-							}
-							uni.openDocument({
-								filePath,
-								success: res => {
-									console.log('打开文件成功');
-								}
-							});
-						}
+          function compressVideo(url, filename) {
+            //压缩视频
+            // var name = 'file:///storage/emulated/0/Documents/weiliao/compress/' + filename;
+            plus.zip.compressVideo(
+              {
+                src: url, //src: (String 类型 )压缩转换原始路径
+                // filename: name, //压缩后的路径
+                quality: 'medium' //压缩级别low medium high
+              },
+              function (e) {
+                //压缩后
+                // openFile(e.tempFilePath)
+                uni.showLoading({
+                  title: '发送中'
+                })
+                sendVideo(e.tempFilePath) //发送
+              },
+              function (error) {
+                console.log('压缩视频失败，请稍候再试')
+              }
+            )
+          }
 
-						function sendPhoto(filePath) {
-							//发送图片
-							_this.$http.uploadFile({
-								url: '/file/upload',
-								filePath: filePath,
-								name: 'file',
-								fileType: 'image',
-								success: res => {
-									var data = JSON.parse(res.data);
-									if (data.code == 200) {
-										var msg = {
-											name: data.data.fileName,
-											url: data.data.fullPath
-										};
-										_this.sendMsg(JSON.stringify(msg), 'IMAGE');
-									}
-								}
-							});
-						}
+          function openFile(filePath) {
+            //打开文件
+            let system = uni.getSystemInfoSync().platform
+            if (system == 'ios') {
+              filePath = encodeURI(filePath)
+            }
+            uni.openDocument({
+              filePath,
+              success: res => {
+                console.log('打开文件成功')
+              }
+            })
+          }
 
-						function sendVideo(filePath) {
-							//发送视频
-							_this.$http.uploadFile({
-								url: '/file/uploadVideo',
-								filePath: filePath,
-								name: 'file',
-								fileType: 'video',
-								success: res => {
-									var data = JSON.parse(res.data);
-									if (data.code == 200) {
-										var msg = {
-											name: data.data.fileName,
-											videoUrl: data.data.fullPath,
-											url: data.data.screenShot
-										};
-										_this.sendMsg(JSON.stringify(msg), 'VIDEO');
-									}
-								}
-							});
-						}
-						// #endif
-						break;
+          function sendPhoto(filePath) {
+            //发送图片
+            _this.$http.uploadFile({
+              url: '/file/upload',
+              filePath: filePath,
+              name: 'file',
+              fileType: 'image',
+              success: res => {
+                var data = JSON.parse(res.data)
+                if (data.code == 200) {
+                  var msg = {
+                    name: data.data.fileName,
+                    url: data.data.fullPath
+                  }
+                  _this.sendMsg(JSON.stringify(msg), 'IMAGE')
+                }
+              }
+            })
+          }
 
-					default:
-						break;
-				}
-			},
-			sendMsg(e, msgType) {
-				if (!e) {
-					return;
-				}
-				var userInfo = uni.getStorageSync('userInfo');
-				// this.$fc.pushOutMsg({
-				// 	msgContent: e,
-				// 	msgType: msgType,
-				// 	windowType:'SINGLE',// this.talkTo.windowType,
-				// 	// userId: this.talkTo.userId
-				// 	userId:this.userId,
-				// 	fromUserId:userInfo.id
-				// });
-				// 消息操作类型
-				var MessageOp = {
-					OpHeartbeat: 0, // 心跳
-					OpAuth: 1, // 认证
-					OpMessage: 2, // 发送消息
-					OpMessageAck: 3, // 消息确认
-					OpMessageRead: 4, // 消息已读
-					OpMessageRecall: 5, // 消息撤回
-					OpTyping: 6, // 正在输入
-					OpOnlineStatus: 7, // 在线状态
-					OpGroupOperation: 8, // 群操作
-					OpError: 9 // 错误
-				};
-				const token = uni.getStorageSync('Authorization');
-				const msgOnlies = {
-					"op": MessageOp.OpMessage,
-					"seq": `auth-${Date.now()}`,
-					"data": {
-						"Authorization": `${token}`,
-						"fromUserId": userInfo.id,
-						// "toUserId": this.userId,
-						"messageType": msgType||1,
-						"content": e,
-						"conversationsId":this.conversationsId
-						// "extra": {
-						//     "imageUrl": "https://example.com/image.jpg",
-						//     "width": 800,
-						//     "height": 600
-						// }
-					},
-				}
-				// console.log()
-				this.$ws.sendSocketMsg(msgOnlies) // 发送消息
-				this.msg = '';
-				// #ifdef H5
-				this.msgFocus = false;
-				this.$nextTick(() => {
-					this.msgFocus = true;
-					this.getChatList()
-				});
-				// #endif
-			},
-			startRecognize() {
-				//语音文本输入
-				// #ifdef H5
-				uni.showToast({
-					title: 'H5暂不支持',
-					icon: 'none'
-				});
-				return;
-				// #endif
-				let _this = this;
-				let options = {};
-				options.engine = 'baidu';
-				options.punctuation = false; // 是否需要标点符号
-				options.timeout = 10 * 1000;
-				plus.speech.startRecognize(
-					options,
-					function(s) {
-						_this.msg = _this.msg + s;
-					},
-					function(e) {
-						uni.showToast({
-							title: '语音识别失败：' + e.message,
-							icon: 'none'
-						});
-					}
-				);
-			},
-			scrolltoBottom() {
-				if (this.autodown) {
-					this.$nextTick(() => {
-						this.timer = setTimeout(() => {
-							uni.pageScrollTo({
-								scrollTop: 9999999,
-								duration: 10
-							});
-						}, 200);
-					});
-				}
-			},
-			getChatList() {
-				// chatWindowData
-				const beforeTime = new Date().getTime();
-				const userInfo = uni.getStorageSync('userInfo');
-				const userId = userInfo.id;
-				this.$http.request({
-					url: '/chat_im/message/history?pageNumber=1&pageSize=10&friendId=' + this.userId + '&userId=' +
-						userId + '&beforeTime=' + beforeTime+'&conversationsId='+this.conversationsId,
-					method: 'GET',
-					success: (res) => {
-						console.log('sd', res);
-						if (res.data.code == 200) {
-							this.chatWindowData = {
-								...res.data.data.content,
-								messages: res.data.data.content.messages.map((item) => {
-									return {
-										...item,
-										type: userInfo.id === item.fromUserId ? 'right' : 'left',
-										avatar: userInfo.avatar,
-									}
-								})
-							}
-							// uni.showToast({
-							// 	title:'已同意',
-							// 	icon:'none'
-							// })
-							// this.queryParams.refreshing=true
-							// this.applyList()
-						}
-					}
-				});
-			}
-		},
-		onNavigationBarButtonTap(e) {
-			console.log('ggg',e)
-			if (!this.showtitleNViewBtns) {
-				return;
-			}
-			switch (e.index) {
-				case 0:
-					if (this.conversationsType == '2') {
-						uni.redirectTo({
-							url: '../groupInfo/detail?groupId=' + this.groupId
-						});
-					}
-					if (this.conversationsType == '1') {
-						uni.redirectTo({
-							url: '../personInfo/detail?param=' + this.talkTo.userId
-						});
-					}
-					break;
-				default:
-					break;
-			}
-		}
-	};
+          function sendVideo(filePath) {
+            //发送视频
+            _this.$http.uploadFile({
+              url: '/file/uploadVideo',
+              filePath: filePath,
+              name: 'file',
+              fileType: 'video',
+              success: res => {
+                var data = JSON.parse(res.data)
+                if (data.code == 200) {
+                  var msg = {
+                    name: data.data.fileName,
+                    videoUrl: data.data.fullPath,
+                    url: data.data.screenShot
+                  }
+                  _this.sendMsg(JSON.stringify(msg), 'VIDEO')
+                }
+              }
+            })
+          }
+          // #endif
+          break
+
+        default:
+          break
+      }
+    },
+    sendMsg(e, msgType) {
+      if (!e) {
+        return
+      }
+      var userInfo = uni.getStorageSync('userInfo')
+      // this.$fc.pushOutMsg({
+      // 	msgContent: e,
+      // 	msgType: msgType,
+      // 	windowType:'SINGLE',// this.talkTo.windowType,
+      // 	// userId: this.talkTo.userId
+      // 	userId:this.userId,
+      // 	fromUserId:userInfo.id
+      // });
+      // 消息操作类型
+      var MessageOp = {
+        OpHeartbeat: 0, // 心跳
+        OpAuth: 1, // 认证
+        OpMessage: 2, // 发送消息
+        OpMessageAck: 3, // 消息确认
+        OpMessageRead: 4, // 消息已读
+        OpMessageRecall: 5, // 消息撤回
+        OpTyping: 6, // 正在输入
+        OpOnlineStatus: 7, // 在线状态
+        OpGroupOperation: 8, // 群操作
+        OpError: 9 // 错误
+      }
+      const token = uni.getStorageSync('Authorization')
+      const msgOnlies = {
+        op: MessageOp.OpMessage,
+        seq: `auth-${Date.now()}`,
+        data: {
+          Authorization: `${token}`,
+          fromUserId: userInfo.id,
+          // "toUserId": this.userId,
+          messageType: msgType || 1,
+          content: e,
+          conversationsId: this.conversationsId
+          // "extra": {
+          //     "imageUrl": "https://example.com/image.jpg",
+          //     "width": 800,
+          //     "height": 600
+          // }
+        }
+      }
+      // console.log()
+      this.$ws.sendSocketMsg(msgOnlies) // 发送消息
+      this.msg = ''
+      // #ifdef H5
+      this.msgFocus = false
+      this.$nextTick(() => {
+        this.msgFocus = true
+        this.getChatList()
+      })
+      // #endif
+    },
+    startRecognize() {
+      //语音文本输入
+      // #ifdef H5
+      uni.showToast({
+        title: 'H5暂不支持',
+        icon: 'none'
+      })
+      return
+      // #endif
+      let _this = this
+      let options = {}
+      options.engine = 'baidu'
+      options.punctuation = false // 是否需要标点符号
+      options.timeout = 10 * 1000
+      plus.speech.startRecognize(
+        options,
+        function (s) {
+          _this.msg = _this.msg + s
+        },
+        function (e) {
+          uni.showToast({
+            title: '语音识别失败：' + e.message,
+            icon: 'none'
+          })
+        }
+      )
+    },
+    scrolltoBottom() {
+      if (this.autodown) {
+        this.$nextTick(() => {
+          this.timer = setTimeout(() => {
+            uni.pageScrollTo({
+              scrollTop: 9999999,
+              duration: 10
+            })
+          }, 200)
+        })
+      }
+    },
+    getChatList() {
+      // chatWindowData
+      const beforeTime = new Date().getTime()
+      const userInfo = uni.getStorageSync('userInfo')
+      const userId = userInfo.id
+      this.$http.request({
+        url:
+          '/chat_im/message/history?pageNumber=1&pageSize=10&friendId=' +
+          this.userId +
+          '&userId=' +
+          userId +
+          '&beforeTime=' +
+          beforeTime +
+          '&conversationsId=' +
+          this.conversationsId,
+        method: 'GET',
+        success: res => {
+          console.log('sd', res)
+          if (res.data.code == 200) {
+            this.chatWindowData = {
+              ...res.data.data.content,
+              messages: res.data.data.content.messages.map(item => {
+                return {
+                  ...item,
+                  type: userInfo.id === item.fromUserId ? 'right' : 'left',
+                  avatar: userInfo.avatar
+                }
+              })
+            }
+            // uni.showToast({
+            // 	title:'已同意',
+            // 	icon:'none'
+            // })
+            // this.queryParams.refreshing=true
+            // this.applyList()
+          }
+        }
+      })
+    }
+  },
+  onNavigationBarButtonTap(e) {
+    console.log('ggg', e)
+    if (!this.showtitleNViewBtns) {
+      return
+    }
+    switch (e.index) {
+      case 0:
+        if (this.conversationsType == '2') {
+          uni.redirectTo({
+            url: '../groupInfo/detail?groupId=' + this.groupId
+          })
+        }
+        if (this.conversationsType == '1') {
+          uni.redirectTo({
+            url: '../personInfo/detail?param=' + this.talkTo.userId
+          })
+        }
+        break
+      default:
+        break
+    }
+  }
+}
 </script>
 
 <style lang="scss" scoped>
-	.autodownView {
-		height: 1px;
-		width: 100%;
-		opacity: 0;
-	}
+.autodownView {
+  height: 1px;
+  width: 100%;
+  opacity: 0;
+}
 
-	.uni-list {
-		background: none;
-	}
+.uni-list {
+  background: none;
+}
 
-	.zfb-tk-main {
-		padding: 0 12px;
-		padding-bottom: 112rpx;
-	}
+.zfb-tk-main {
+  padding: 0 12px;
+  padding-bottom: 112rpx;
+}
 
-	.zfb-tk-send-tool {
-		background: #f7f7f7;
-		position: fixed;
-		left: 0;
-		bottom: 0;
-		width: 100%;
-		transition: all 0.1s;
-	}
+.zfb-tk-send-tool {
+  background: #f7f7f7;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  transition: all 0.1s;
+}
 
-	.zfb-tk-send-tools {
-		height: 558rpx;
-		width: 100%;
-		background-color: #f7f7f7;
-		display: flex;
-		flex-direction: row;
-		flex-wrap: wrap;
-		align-items: center;
-	}
+.zfb-tk-send-tools {
+  height: 558rpx;
+  width: 100%;
+  background-color: #f7f7f7;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+}
 
-	.zfb-tk-send-tools-item {
-		padding: 35rpx;
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-	}
+.zfb-tk-send-tools-item {
+  padding: 35rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 
-	.zfb-tk-send-tools-icon {
-		background-color: #fff;
-		width: 110rpx;
-		height: 110rpx;
-		display: flex;
-		flex-direction: row;
-		align-items: center;
-		justify-content: center;
-		border-radius: 12rpx;
-	}
+.zfb-tk-send-tools-icon {
+  background-color: #fff;
+  width: 110rpx;
+  height: 110rpx;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12rpx;
+}
 
-	.zfb-tk-send-tools-icon .wxfont {
-		color: #181818;
-		font-size: 64rpx;
-	}
+.zfb-tk-send-tools-icon .wxfont {
+  color: #181818;
+  font-size: 64rpx;
+}
 
-	.zfb-tk-send-tools-text {
-		font-size: 24rpx;
-		color: #666;
-		margin-top: 16rpx;
-	}
+.zfb-tk-send-tools-text {
+  font-size: 24rpx;
+  color: #666;
+  margin-top: 16rpx;
+}
 
-	.zfb-tk-send-tool-c {
-		position: relative;
-		z-index: 3;
-		padding: 16rpx 12rpx;
-		box-sizing: border-box;
-		display: flex;
-		flex-direction: row;
-		align-items: center;
-		justify-content: space-around;
-		border: 1px #ddd solid;
-		border-left: none;
-		border-right: none;
-	}
+.zfb-tk-send-tool-c {
+  position: relative;
+  z-index: 3;
+  padding: 16rpx 12rpx;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+  border: 1px #ddd solid;
+  border-left: none;
+  border-right: none;
+}
 
-	.zfb-tk-send-tool-c .zfb-tk-send-tool-btn {
-		transition: color 0.5s;
-	}
+.zfb-tk-send-tool-c .zfb-tk-send-tool-btn {
+  transition: color 0.5s;
+}
 
-	.zfb-tk-send-tool-input-box {
-		overflow: auto;
-		width: 100%;
-		margin: 0 12rpx;
-		min-height: 75rpx;
-		background-color: #fff;
-		border-radius: 24rpx;
-		padding-top: 18rpx;
-		max-height: 225rpx;
-		box-sizing: border-box;
-	}
+.zfb-tk-send-tool-input-box {
+  overflow: auto;
+  width: 100%;
+  margin: 0 12rpx;
+  min-height: 75rpx;
+  background-color: #fff;
+  border-radius: 24rpx;
+  padding-top: 18rpx;
+  max-height: 225rpx;
+  box-sizing: border-box;
+}
 
-	.zfb-tk-send-tool .zfb-tk-send-tool-input {
-		padding: 0 24rpx;
-		box-sizing: border-box !important;
-		width: 100%;
-		background: #fff;
-	}
+.zfb-tk-send-tool .zfb-tk-send-tool-input {
+  padding: 0 24rpx;
+  box-sizing: border-box !important;
+  width: 100%;
+  background: #fff;
+}
 
-	.zfb-tk-send-tool-vioce {
-		box-sizing: border-box;
-		margin: 0 12rpx;
-		width: 100%;
-		height: 75rpx;
-		border-radius: 24rpx;
-		background: #fff;
-		display: flex;
-		flex-direction: row;
-		align-items: center;
-	}
+.zfb-tk-send-tool-vioce {
+  box-sizing: border-box;
+  margin: 0 12rpx;
+  width: 100%;
+  height: 75rpx;
+  border-radius: 24rpx;
+  background: #fff;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
 
-	.zfb-tk-send-tool-vioce-item {
-		text-align: center;
-		font-size: 24rpx;
-		line-height: 75rpx;
-		flex: 1;
-	}
+.zfb-tk-send-tool-vioce-item {
+  text-align: center;
+  font-size: 24rpx;
+  line-height: 75rpx;
+  flex: 1;
+}
 
-	.zfb-tk-send-tool-vioce-item:nth-child(1) {
-		border-right: 1px #eee solid;
-	}
+.zfb-tk-send-tool-vioce-item:nth-child(1) {
+  border-right: 1px #eee solid;
+}
 
-	.zfb-tk-send-tool-text {
-		white-space: nowrap;
-		padding: 10rpx 24rpx;
-		border-radius: 12rpx;
-		border: 1px #ddd solid;
-		background: #f7f7f7;
-		color: #ddd;
-	}
+.zfb-tk-send-tool-text {
+  white-space: nowrap;
+  padding: 10rpx 24rpx;
+  border-radius: 12rpx;
+  border: 1px #ddd solid;
+  background: #f7f7f7;
+  color: #ddd;
+}
 
-	.zfb-tk-send-tool-more {
-		font-size: 64rpx;
-		color: #333;
-	}
+.zfb-tk-send-tool-more {
+  font-size: 64rpx;
+  color: #333;
+}
 
-	.zfb-tk-send-tool-icon {
-		font-size: 64rpx;
-		color: #333;
-	}
+.zfb-tk-send-tool-icon {
+  font-size: 64rpx;
+  color: #333;
+}
 
-	.zfb-tk-recorder {
-		width: 250rpx;
-		height: 250rpx;
-		left: 50%;
-		transform: translateX(-50%);
-		bottom: 680rpx;
-		box-sizing: border-box;
-		text-align: center;
-		position: fixed;
-		border-radius: 50%;
-		background-color: #f8f8f8;
-		box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.05);
-		padding: 20rpx;
-		display: flex;
-		flex-direction: row;
-		align-items: center;
-		justify-content: center;
-	}
+.zfb-tk-recorder {
+  width: 250rpx;
+  height: 250rpx;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 680rpx;
+  box-sizing: border-box;
+  text-align: center;
+  position: fixed;
+  border-radius: 50%;
+  background-color: #f8f8f8;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.05);
+  padding: 20rpx;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
 
-	.popsendCard {
-		display: flex;
-		background-color: #fff;
-		overflow: auto;
-	}
+.popsendCard {
+  display: flex;
+  background-color: #fff;
+  overflow: auto;
+}
 
-	.popsendCard-close {
-		width: 100%;
-		text-align: center;
-		height: 70rpx;
-		line-height: 70rpx;
-		font-size: 42rpx;
-		background-color: #fff;
-		position: fixed;
-		bottom: 0;
-		left: 0;
-		z-index: 9999;
-	}
+.popsendCard-close {
+  width: 100%;
+  text-align: center;
+  height: 70rpx;
+  line-height: 70rpx;
+  font-size: 42rpx;
+  background-color: #fff;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  z-index: 9999;
+}
 
-	.wxemojitool {
-		height: 558rpx;
-	}
+.wxemojitool {
+  height: 558rpx;
+}
 
-	.wxemojitool-content {
-		display: flex;
-		flex-direction: row;
-		flex-wrap: wrap;
-	}
+.wxemojitool-content {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
 
-	.wxemojitool-item {
-		font-size: 44rpx;
-		width: 93rpx;
-		height: 93rpx;
-		display: flex;
-		flex-direction: row;
-		justify-content: center;
-		align-items: center;
-	}
+.wxemojitool-item {
+  font-size: 44rpx;
+  width: 93rpx;
+  height: 93rpx;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
 </style>

@@ -1,7 +1,5 @@
 <template>
   <view class="circle-list-page">
-    <watermark />
-
     <!-- 搜索框区域 - 去掉fixed定位，适配抽屉布局 -->
     <view class="search-wrap">
       <input

@@ -73,7 +73,8 @@ export default {
       default() {
         return [{}]
       }
-    }
+    },
+    refresh: {}
   },
   onShow() {},
   computed: {},
@@ -130,6 +131,7 @@ export default {
               title: '撤销成功',
               icon: 'none'
             })
+            this.refresh()
           }
         }
       })
