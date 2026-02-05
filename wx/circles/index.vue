@@ -257,8 +257,8 @@ export default {
     transition: all 0.2s ease;
     padding: 0 !important;
     &.active {
-      background: #f0f7ff;
-      color: #2d79e6;
+      background: #f8f5ff; // 紫色浅背景
+      color: #7B61FF; // 紫色主色
       font-weight: 700;
     }
   }
@@ -355,8 +355,8 @@ export default {
     font-size: 22rpx;
     padding: 6rpx 12rpx;
     border-radius: 12rpx;
-    background: #f0f7ff;
-    color: #2d79e6;
+    background: #f8f5ff; // 紫色浅背景
+    color: #7B61FF; // 紫色主色
     flex-shrink: 0;
     white-space: nowrap;
   }

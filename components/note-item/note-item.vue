@@ -3,13 +3,20 @@
 	<uni-card :title="noteData?.titleItem?.content" :sub-title="noteData?.textItem?.content" extra=""
 		:thumbnail="noteData?.imgItem?.content" @click="onClick"
 		margin="0">
-		<!-- <view> -->
-			<!-- <text class="uni-body">
-				这是一个带头像和双标题的基础卡片，此示例展示了一个完整的卡片
-				这是一个带头像和双标题的基础卡片，此示例展示了一个完整的卡片。
-				这是一个带头像和双标题的基础卡片，此示例展示了一个完整的卡片。。
-			</text> -->
-		<!-- </view> -->
+		<view slot="actions" class="card-actions">
+					<view class="card-actions-item" @click="actionsClick('位置')">
+						<uni-icons type="location-filled" size="18" color="#999"></uni-icons>
+						<text class="card-actions-item-text">位置</text>
+					</view>
+					<view class="card-actions-item" @click="actionsClick('视频')">
+						<uni-icons type="videocam-filled" size="18" color="#999"></uni-icons>
+						<text class="card-actions-item-text">视频</text>
+					</view>
+					<view class="card-actions-item" @click="actionsClick('名片')">
+						<uni-icons type="person-filled" size="18" color="#999"></uni-icons>
+						<text class="card-actions-item-text">名片</text>
+					</view>
+				</view>
 		<text class="tag">笔记</text>
 	</uni-card>
 
@@ -123,5 +130,10 @@
 		background-color: #f5f7fa;
 		border-radius: 8rpx;
 		width: fit-content;
+	}
+	.card-actions{
+		display:flex;
+		justify-content: space-between;
+
 	}
 </style>

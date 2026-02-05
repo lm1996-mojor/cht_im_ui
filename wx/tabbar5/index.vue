@@ -52,7 +52,7 @@
     </view>
     <uni-load-more :status="queryParams.status" class="load-more" />
 
-    <!-- ✅ 新增 右侧底部固定发布按钮 -->
+    <!-- 右侧底部固定发布按钮 -->
     <view class="publish-btn" @click="openDrawer">
       <text class="publish-icon">+</text>
     </view>
@@ -74,7 +74,7 @@ export default {
       },
       content: [],
       isLoading: false,
-      // ✅ 新增 控制抽屉显示隐藏的开关
+      // 控制抽屉显示隐藏的开关
       showDrawer: false
     }
   },
@@ -191,13 +191,13 @@ export default {
     gomsglist(circleId) {
       // uni.navigateTo({url: '../circlesDynamic/index?circleId=' + circleId});
     },
-    // ✅ 新增 打开抽屉方法
+    // 打开抽屉方法
     openDrawer() {
       uni.navigateTo({
         url: '../circlesDynamic/create'
       })
     },
-    // ✅ 新增 关闭抽屉方法
+    // 关闭抽屉方法
     closeDrawer() {
       this.showDrawer = false
       // 恢复页面滚动
@@ -241,7 +241,7 @@ page {
   padding: 20rpx 0;
   box-sizing: border-box;
   width: 100vw;
-  position: relative; // ✅ 新增 为固定按钮做定位父级
+  position: relative; // 为固定按钮做定位父级
 }
 
 .note-list-wrap {
@@ -287,7 +287,6 @@ page {
     .note-title {
       display: block;
       font-size: 34rpx;
-      // font-weight: 600;
       color: #1a1a1a;
       line-height: 44rpx;
       margin-bottom: 6rpx;
@@ -339,7 +338,7 @@ page {
   font-size: 26rpx;
 }
 
-// ✅ 新增 右侧底部固定发布按钮 样式 (核心)
+// 右侧底部固定发布按钮 样式 (核心-紫色主题)
 .publish-btn {
   position: fixed;
   right: 30rpx;
@@ -347,14 +346,14 @@ page {
   z-index: 99;
   width: 100rpx;
   height: 100rpx;
-  background: #2d79e6;
+  background: #7B61FF; // 紫色主色
   border-radius: 50%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 8rpx;
-  box-shadow: 0 4rpx 20rpx rgba(45, 121, 230, 0.5);
+  box-shadow: 0 4rpx 20rpx rgba(123, 97, 255, 0.5); // 紫色渐变阴影
 
   &:active {
     opacity: 0.9;
@@ -375,7 +374,7 @@ page {
   }
 }
 
-// ✅ 新增 抽屉遮罩层 样式
+// 抽屉遮罩层 样式
 .drawer-mask {
   position: fixed;
   top: 0;
@@ -394,7 +393,7 @@ page {
   }
 }
 
-// ✅ 新增 右侧滑出全屏抽屉 核心样式
+// 右侧滑出全屏抽屉 核心样式
 .slide-drawer {
   position: fixed;
   top: 0;
@@ -455,7 +454,7 @@ page {
   box-sizing: border-box;
 }
 
-// 抽屉内表单样式 (可按需修改)
+// 抽屉内表单样式 (可按需修改-紫色主题)
 .form-item {
   margin-bottom: 40rpx;
 
@@ -501,7 +500,7 @@ page {
   width: 100%;
   height: 88rpx;
   line-height: 88rpx;
-  background: #2d79e6;
+  background: #7B61FF; // 紫色主色
   color: #fff;
   border-radius: 10rpx;
   font-size: 28rpx;
