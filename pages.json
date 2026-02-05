@@ -1,27 +1,5 @@
 {
   "pages": [
-    // 	{
-    // 	"path": "wx/tabbar1/index",
-    // 	"name": "wxtabbar1",
-    // 	"aliasPath": "/wxtabbar1",
-    // 	"requireAuth": true,
-    // 	"style": {
-    // 		"navigationBarTitleText": "消息",
-    // 		"app-plus": {
-    // 			"titleNView": {
-    // 				"buttons": [{
-    // 					"text": "\ue657",
-    // 					"fontSrc": "/static/wx_iconfont.ttf",
-    // 					"fontSize": "28px"
-    // 				}, {
-    // 					"text": "\ue636",
-    // 					"fontSrc": "/static/wx_iconfont.ttf",
-    // 					"fontSize": "26px"
-    // 				}]
-    // 			}
-    // 		}
-    // 	}
-    // },
     {
       "path": "pages/wxindex/index",
       "name": "wxindex",
@@ -39,61 +17,53 @@
       "requireAuth": true,
       "style": {
         "navigationBarTitleText": "隐私及服务协议",
-        "navigationBarBackgroundColor": "#ffffff",
-        "navigationBarTextStyle": "black"
+        "navigationBarBackgroundColor": "#6200ee",
+        "navigationBarTextStyle": "white"
       }
     }
   ],
   "globalStyle": {
-    "navigationBarTextStyle": "black",
+    "navigationBarTextStyle": "white",
     "navigationBarTitleText": "uni-app",
-    "navigationBarBackgroundColor": "#F8F8F8",
-    "backgroundColor": "#F8F8F8",
+    "navigationBarBackgroundColor": "#6200ee",
+    "backgroundColor": "#f3e5f5",
     "app-plus": {
-      "background": "#efeff4"
+      "background": "#f3e5f5"
     }
   },
   "tabBar": {
-    //底部
-    "color": "#999999",
-    "selectedColor": "#09C160",
-    "borderStyle": "black",
-    "backgroundColor": "#ffffff",
-    "list": [
-      {
-        "pagePath": "wx/tabbar1/index",
-        "iconPath": "static/wx/n0.png",
-        "selectedIconPath": "static/wx/n0_on.png",
-        "text": "消息"
-      },
-      {
-        "pagePath": "wx/tabbar2/index",
-        "iconPath": "static/wx/n01.png",
-        "selectedIconPath": "static/wx/n01_on.png",
-        "text": "通讯录"
-      },
-      {
-        "pagePath": "wx/tabbar5/index",
-        "iconPath": "static/wx/n02.png",
-        "selectedIconPath": "static/wx/n02_on.png",
-        "text": "圈子"
-      },
-      {
-        "pagePath": "wx/tabbar3/index",
-        "iconPath": "static/wx/n03.png",
-        "selectedIconPath": "static/wx/n03_on.png",
-        "text": "我"
-      }
-      // {
-      //   "pagePath": "wx/tabbar4/index",
-      //   "iconPath": "static/wx/n03.png",
-      //   "selectedIconPath": "static/wx/n03_on.png",
-      //   "text": "我"
-      // }
-    ]
-  },
+  "color": "#f3e5f5", // 未选中文字（浅紫，适配深色背景）
+  "selectedColor": "#ffffff", // 选中文字（白色，突出醒目）
+  "borderStyle": "#7c4dff", // 顶部边框色（辅助主题色）
+  "backgroundColor": "#6200ee", // 底部背景色（主题主色，沉浸式）
+  "list": [
+    {
+      "pagePath": "wx/tabbar1/index",
+      "iconPath": "static/wx/n0.png",
+      "selectedIconPath": "static/wx/n0_on.png",
+      "text": "消息"
+    },
+    {
+      "pagePath": "wx/tabbar2/index",
+      "iconPath": "static/wx/n01.png",
+      "selectedIconPath": "static/wx/n01_on.png",
+      "text": "通讯录"
+    },
+    {
+      "pagePath": "wx/tabbar5/index",
+      "iconPath": "static/wx/n02.png",
+      "selectedIconPath": "static/wx/n02_on.png",
+      "text": "圈子"
+    },
+    {
+      "pagePath": "wx/tabbar3/index",
+      "iconPath": "static/wx/n03.png",
+      "selectedIconPath": "static/wx/n03_on.png",
+      "text": "我"
+    }
+  ]
+},
   "subPackages": [
-    //分包，微信小程序单包最大2M
     {
       "root": "wx",
       "pages": [
@@ -103,7 +73,9 @@
           "aliasPath": "/wxlogin",
           "requireAuth": false,
           "style": {
-            "navigationBarTitleText": "登录"
+            "navigationBarTitleText": "登录",
+            "navigationBarBackgroundColor": "#6200ee",
+            "navigationBarTextStyle": "white"
           }
         },
         {
@@ -112,7 +84,9 @@
           "aliasPath": "/wxregister",
           "requireAuth": false,
           "style": {
-            "navigationBarTitleText": "注册"
+            "navigationBarTitleText": "注册",
+            "navigationBarBackgroundColor": "#6200ee",
+            "navigationBarTextStyle": "white"
           }
         },
         {
@@ -121,7 +95,9 @@
           "aliasPath": "/wxforgetPass",
           "requireAuth": false,
           "style": {
-            "navigationBarTitleText": "忘记密码"
+            "navigationBarTitleText": "忘记密码",
+            "navigationBarBackgroundColor": "#6200ee",
+            "navigationBarTextStyle": "white"
           }
         },
         {
@@ -131,13 +107,18 @@
           "requireAuth": true,
           "style": {
             "navigationBarTitleText": "聊天窗口",
+            "navigationBarBackgroundColor": "#6200ee",
+            "navigationBarTextStyle": "white",
             "app-plus": {
               "titleNView": {
+                "backgroundColor": "#6200ee",
+                "titleColor": "#ffffff",
                 "buttons": [
                   {
                     "text": "\ue623",
                     "fontSrc": "/static/wx_iconfont.ttf",
-                    "fontSize": "28px"
+                    "fontSize": "28px",
+                    "color": "#ffffff"
                   }
                 ]
               }
@@ -151,18 +132,24 @@
           "requireAuth": true,
           "style": {
             "navigationBarTitleText": "消息",
+            "navigationBarBackgroundColor": "#6200ee",
+            "navigationBarTextStyle": "white",
             "app-plus": {
               "titleNView": {
+                "backgroundColor": "#6200ee",
+                "titleColor": "#ffffff",
                 "buttons": [
                   {
                     "text": "\ue657",
                     "fontSrc": "/static/wx_iconfont.ttf",
-                    "fontSize": "28px"
+                    "fontSize": "28px",
+                    "color": "#ffffff"
                   },
                   {
                     "text": "\ue636",
                     "fontSrc": "/static/wx_iconfont.ttf",
-                    "fontSize": "26px"
+                    "fontSize": "26px",
+                    "color": "#ffffff"
                   }
                 ]
               }
@@ -176,14 +163,16 @@
           "requireAuth": true,
           "style": {
             "navigationBarTitleText": "圈子广场",
-            "navigationBarTitleAlign": "left", // ✅ 小程序端：标题靠左
-            "navigationBarPaddingRight": "120px", // ✅ 小程序端：给右侧按钮预留空间
+            "navigationBarTitleAlign": "left",
+            "navigationBarPaddingRight": "120px",
+            "navigationBarBackgroundColor": "#6200ee",
+            "navigationBarTextStyle": "white",
             "app-plus": {
               "titleNView": {
                 "titleAlign": "right",
                 "titleFontSize": "18px",
-                "titleColor": "#1A1A1A",
-                "backgroundColor": "#FFFFFF",
+                "titleColor": "#ffffff",
+                "backgroundColor": "#6200ee",
                 "paddingLeft": "15px",
                 "paddingRight": "10px",
                 "buttons": [
@@ -191,21 +180,12 @@
                     "text": "我的圈子",
                     "fontSrc": "/static/wx_iconfont.ttf",
                     "fontSize": "14px",
-                    "color": "#1A1A1A",
+                    "color": "#ffffff",
                     "width": "80px",
                     "align": "right",
                     "float": "right",
                     "marginRight": "15px"
                   }
-                  // {
-                  // 	"text": "\ue636",
-                  // 	"fontSrc": "/static/wx_iconfont.ttf",
-                  // 	"fontSize": "26px",
-                  // 	"color": "#1A1A1A",
-                  // 	"width": "40px",
-                  // 	"align": "right",
-                  // 	"float": "right"
-                  // }
                 ]
               }
             }
@@ -218,18 +198,24 @@
           "requireAuth": true,
           "style": {
             "navigationBarTitleText": "通讯录",
+            "navigationBarBackgroundColor": "#6200ee",
+            "navigationBarTextStyle": "white",
             "app-plus": {
               "titleNView": {
+                "backgroundColor": "#6200ee",
+                "titleColor": "#ffffff",
                 "buttons": [
                   {
                     "text": "\ue657",
                     "fontSrc": "/static/wx_iconfont.ttf",
-                    "fontSize": "28px"
+                    "fontSize": "28px",
+                    "color": "#ffffff"
                   },
                   {
                     "text": "\ue636",
                     "fontSrc": "/static/wx_iconfont.ttf",
-                    "fontSize": "26px"
+                    "fontSize": "26px",
+                    "color": "#ffffff"
                   }
                 ]
               }
@@ -243,23 +229,9 @@
           "requireAuth": true,
           "style": {
             "navigationStyle": "custom",
-            "navigationBarTitleText": "我"
-            // "app-plus": {
-            //   "titleNView": {
-            //     "buttons": [
-            //       {
-            //         "text": "\ue657",
-            //         "fontSrc": "/static/wx_iconfont.ttf",
-            //         "fontSize": "28px"
-            //       },
-            //       {
-            //         "text": "\ue636",
-            //         "fontSrc": "/static/wx_iconfont.ttf",
-            //         "fontSize": "26px"
-            //       }
-            //     ]
-            //   }
-            // }
+            "navigationBarTitleText": "我",
+            "navigationBarBackgroundColor": "#6200ee",
+            "navigationBarTextStyle": "white"
           }
         },
         {
@@ -269,7 +241,8 @@
           "requireAuth": true,
           "style": {
             "navigationBarTitleText": "我",
-            "navigationBarBackgroundColor": "#ffffff"
+            "navigationBarBackgroundColor": "#6200ee",
+            "navigationBarTextStyle": "white"
           }
         },
         {
@@ -278,7 +251,9 @@
           "aliasPath": "/wxcreateGroup",
           "requireAuth": true,
           "style": {
-            "navigationBarTitleText": "发起群聊"
+            "navigationBarTitleText": "发起群聊",
+            "navigationBarBackgroundColor": "#6200ee",
+            "navigationBarTextStyle": "white"
           }
         },
         {
@@ -288,7 +263,7 @@
           "requireAuth": true,
           "style": {
             "navigationBarTitleText": "摇一摇",
-            "navigationBarBackgroundColor": "#212121",
+            "navigationBarBackgroundColor": "#6200ee",
             "navigationBarTextStyle": "white"
           }
         },
@@ -299,13 +274,18 @@
           "requireAuth": true,
           "style": {
             "navigationBarTitleText": "附近的人",
+            "navigationBarBackgroundColor": "#6200ee",
+            "navigationBarTextStyle": "white",
             "app-plus": {
               "titleNView": {
+                "backgroundColor": "#6200ee",
+                "titleColor": "#ffffff",
                 "buttons": [
                   {
                     "text": "\ue623",
                     "fontSrc": "/static/wx_iconfont.ttf",
-                    "fontSize": "28px"
+                    "fontSize": "28px",
+                    "color": "#ffffff"
                   }
                 ]
               }
@@ -319,14 +299,19 @@
           "requireAuth": true,
           "style": {
             "navigationBarTitleText": "消息",
+            "navigationBarBackgroundColor": "#6200ee",
+            "navigationBarTextStyle": "white",
             "app-plus": {
               "titleNView": {
+                "backgroundColor": "#6200ee",
+                "titleColor": "#ffffff",
                 "buttons": [
                   {
                     "text": "清空",
                     "fontSize": "16px",
                     "width": "44px",
-                    "fontWeight": "bold"
+                    "fontWeight": "bold",
+                    "color": "#ffffff"
                   }
                 ]
               }
@@ -339,7 +324,9 @@
           "aliasPath": "/wxsystem",
           "requireAuth": true,
           "style": {
-            "navigationBarTitleText": "设置"
+            "navigationBarTitleText": "设置",
+            "navigationBarBackgroundColor": "#6200ee",
+            "navigationBarTextStyle": "white"
           }
         },
         {
@@ -348,7 +335,9 @@
           "aliasPath": "/wxsearch",
           "requireAuth": true,
           "style": {
-            "navigationBarTitleText": "搜索"
+            "navigationBarTitleText": "搜索",
+            "navigationBarBackgroundColor": "#6200ee",
+            "navigationBarTextStyle": "white"
           }
         },
         {
@@ -359,17 +348,9 @@
           "style": {
             "navigationBarTitleText": "新的朋友",
             "enablePullDownRefresh": true,
-            "app-plus": {
-              // "titleNView": {
-              // 	"buttons": [{
-              // 		"text": "-添加",
-              // 		"fontSize": "16px"
-              // 	}],
-              // 	"backButton": {
-              // 		"background": "rgba(0,0,0,0)"
-              // 	}
-              // }
-            }
+            "navigationBarBackgroundColor": "#6200ee",
+            "navigationBarTextStyle": "white",
+            "app-plus": {}
           }
         },
         {
@@ -380,6 +361,8 @@
           "style": {
             "navigationBarTitleText": "新的朋友",
             "enablePullDownRefresh": true,
+            "navigationBarBackgroundColor": "#6200ee",
+            "navigationBarTextStyle": "white",
             "app-plus": {}
           }
         },
@@ -391,6 +374,8 @@
           "style": {
             "navigationBarTitleText": "添加新朋友",
             "enablePullDownRefresh": true,
+            "navigationBarBackgroundColor": "#6200ee",
+            "navigationBarTextStyle": "white",
             "app-plus": {}
           }
         },
@@ -401,16 +386,22 @@
           "requireAuth": true,
           "style": {
             "navigationBarTitleText": "朋友验证",
+            "navigationBarBackgroundColor": "#6200ee",
+            "navigationBarTextStyle": "white",
             "app-plus": {
               "titleNView": {
+                "backgroundColor": "#6200ee",
+                "titleColor": "#ffffff",
                 "buttons": [
                   {
                     "text": "发送",
-                    "fontSize": "16px"
+                    "fontSize": "16px",
+                    "color": "#ffffff"
                   }
                 ],
                 "backButton": {
-                  "background": "rgba(0,0,0,0)"
+                  "background": "rgba(0,0,0,0)",
+                  "color": "#ffffff"
                 }
               }
             }
@@ -422,7 +413,9 @@
           "aliasPath": "/wxpersonDetail",
           "requireAuth": true,
           "style": {
-            "navigationBarTitleText": "个人信息" //个人中心信息
+            "navigationBarTitleText": "个人信息",
+            "navigationBarBackgroundColor": "#6200ee",
+            "navigationBarTextStyle": "white"
           }
         },
         {
@@ -431,7 +424,9 @@
           "aliasPath": "/wxpersonInfoAddFriendsDetail",
           "requireAuth": true,
           "style": {
-            "navigationBarTitleText": "" //添加好友信息
+            "navigationBarTitleText": "",
+            "navigationBarBackgroundColor": "#6200ee",
+            "navigationBarTextStyle": "white"
           }
         },
         {
@@ -440,17 +435,23 @@
           "aliasPath": "/wxpersonInfobeizhu",
           "requireAuth": true,
           "style": {
-            "navigationBarTitleText": "设置备注", //修改备注
+            "navigationBarTitleText": "设置备注",
+            "navigationBarBackgroundColor": "#6200ee",
+            "navigationBarTextStyle": "white",
             "app-plus": {
               "titleNView": {
+                "backgroundColor": "#6200ee",
+                "titleColor": "#ffffff",
                 "buttons": [
                   {
                     "text": "完成",
-                    "fontSize": "16px"
+                    "fontSize": "16px",
+                    "color": "#ffffff"
                   }
                 ],
                 "backButton": {
-                  "background": "rgba(0,0,0,0)"
+                  "background": "rgba(0,0,0,0)",
+                  "color": "#ffffff"
                 }
               }
             }
@@ -462,17 +463,23 @@
           "aliasPath": "/wxpersonDetaileditNikeName",
           "requireAuth": true,
           "style": {
-            "navigationBarTitleText": "更改名称", //修改备注
+            "navigationBarTitleText": "更改名称",
+            "navigationBarBackgroundColor": "#6200ee",
+            "navigationBarTextStyle": "white",
             "app-plus": {
               "titleNView": {
+                "backgroundColor": "#6200ee",
+                "titleColor": "#ffffff",
                 "buttons": [
                   {
                     "text": "完成",
-                    "fontSize": "16px"
+                    "fontSize": "16px",
+                    "color": "#ffffff"
                   }
                 ],
                 "backButton": {
-                  "background": "rgba(0,0,0,0)"
+                  "background": "rgba(0,0,0,0)",
+                  "color": "#ffffff"
                 }
               }
             }
@@ -484,17 +491,23 @@
           "aliasPath": "/wxpersonDetaileditchatNo",
           "requireAuth": true,
           "style": {
-            "navigationBarTitleText": "更改微聊号", //修改备注
+            "navigationBarTitleText": "更改微聊号",
+            "navigationBarBackgroundColor": "#6200ee",
+            "navigationBarTextStyle": "white",
             "app-plus": {
               "titleNView": {
+                "backgroundColor": "#6200ee",
+                "titleColor": "#ffffff",
                 "buttons": [
                   {
                     "text": "完成",
-                    "fontSize": "16px"
+                    "fontSize": "16px",
+                    "color": "#ffffff"
                   }
                 ],
                 "backButton": {
-                  "background": "rgba(0,0,0,0)"
+                  "background": "rgba(0,0,0,0)",
+                  "color": "#ffffff"
                 }
               }
             }
@@ -507,16 +520,22 @@
           "requireAuth": true,
           "style": {
             "navigationBarTitleText": "更改个性签名",
+            "navigationBarBackgroundColor": "#6200ee",
+            "navigationBarTextStyle": "white",
             "app-plus": {
               "titleNView": {
+                "backgroundColor": "#6200ee",
+                "titleColor": "#ffffff",
                 "buttons": [
                   {
                     "text": "完成",
-                    "fontSize": "16px"
+                    "fontSize": "16px",
+                    "color": "#ffffff"
                   }
                 ],
                 "backButton": {
-                  "background": "rgba(0,0,0,0)"
+                  "background": "rgba(0,0,0,0)",
+                  "color": "#ffffff"
                 }
               }
             }
@@ -529,16 +548,22 @@
           "requireAuth": true,
           "style": {
             "navigationBarTitleText": "更改性别",
+            "navigationBarBackgroundColor": "#6200ee",
+            "navigationBarTextStyle": "white",
             "app-plus": {
               "titleNView": {
+                "backgroundColor": "#6200ee",
+                "titleColor": "#ffffff",
                 "buttons": [
                   {
                     "text": "完成",
-                    "fontSize": "16px"
+                    "fontSize": "16px",
+                    "color": "#ffffff"
                   }
                 ],
                 "backButton": {
-                  "background": "rgba(0,0,0,0)"
+                  "background": "rgba(0,0,0,0)",
+                  "color": "#ffffff"
                 }
               }
             }
@@ -551,16 +576,22 @@
           "requireAuth": true,
           "style": {
             "navigationBarTitleText": "更改地区",
+            "navigationBarBackgroundColor": "#6200ee",
+            "navigationBarTextStyle": "white",
             "app-plus": {
               "titleNView": {
+                "backgroundColor": "#6200ee",
+                "titleColor": "#ffffff",
                 "buttons": [
                   {
                     "text": "完成",
-                    "fontSize": "16px"
+                    "fontSize": "16px",
+                    "color": "#ffffff"
                   }
                 ],
                 "backButton": {
-                  "background": "rgba(0,0,0,0)"
+                  "background": "rgba(0,0,0,0)",
+                  "color": "#ffffff"
                 }
               }
             }
@@ -573,16 +604,22 @@
           "requireAuth": true,
           "style": {
             "navigationBarTitleText": "设置密码",
+            "navigationBarBackgroundColor": "#6200ee",
+            "navigationBarTextStyle": "white",
             "app-plus": {
               "titleNView": {
+                "backgroundColor": "#6200ee",
+                "titleColor": "#ffffff",
                 "buttons": [
                   {
                     "text": "完成",
-                    "fontSize": "16px"
+                    "fontSize": "16px",
+                    "color": "#ffffff"
                   }
                 ],
                 "backButton": {
-                  "background": "rgba(0,0,0,0)"
+                  "background": "rgba(0,0,0,0)",
+                  "color": "#ffffff"
                 }
               }
             }
@@ -594,14 +631,19 @@
           "aliasPath": "/wxpersonInfoDetail",
           "requireAuth": true,
           "style": {
-            "navigationBarTitleText": "信息", //好友个人信息
+            "navigationBarTitleText": "信息",
+            "navigationBarBackgroundColor": "#6200ee",
+            "navigationBarTextStyle": "white",
             "app-plus": {
               "titleNView": {
+                "backgroundColor": "#6200ee",
+                "titleColor": "#ffffff",
                 "buttons": [
                   {
                     "text": "\ue623",
                     "fontSrc": "/static/wx_iconfont.ttf",
-                    "fontSize": "28px"
+                    "fontSize": "28px",
+                    "color": "#ffffff"
                   }
                 ]
               }
@@ -614,7 +656,9 @@
           "aliasPath": "/wxgroupInfoDetail",
           "requireAuth": true,
           "style": {
-            "navigationBarTitleText": "聊天信息" //群信息
+            "navigationBarTitleText": "聊天信息",
+            "navigationBarBackgroundColor": "#6200ee",
+            "navigationBarTextStyle": "white"
           }
         },
         {
@@ -623,7 +667,9 @@
           "aliasPath": "/wxqunAdd",
           "requireAuth": true,
           "style": {
-            "navigationBarTitleText": "选择联系人"
+            "navigationBarTitleText": "选择联系人",
+            "navigationBarBackgroundColor": "#6200ee",
+            "navigationBarTextStyle": "white"
           }
         },
         {
@@ -632,7 +678,9 @@
           "aliasPath": "/wxqunless",
           "requireAuth": true,
           "style": {
-            "navigationBarTitleText": "聊天成员"
+            "navigationBarTitleText": "聊天成员",
+            "navigationBarBackgroundColor": "#6200ee",
+            "navigationBarTextStyle": "white"
           }
         },
         {
@@ -641,17 +689,23 @@
           "aliasPath": "/wxgroupInfoeditGroupName",
           "requireAuth": true,
           "style": {
-            "navigationBarTitleText": "更改群聊名称", //修改备注
+            "navigationBarTitleText": "更改群聊名称",
+            "navigationBarBackgroundColor": "#6200ee",
+            "navigationBarTextStyle": "white",
             "app-plus": {
               "titleNView": {
+                "backgroundColor": "#6200ee",
+                "titleColor": "#ffffff",
                 "buttons": [
                   {
                     "text": "完成",
-                    "fontSize": "16px"
+                    "fontSize": "16px",
+                    "color": "#ffffff"
                   }
                 ],
                 "backButton": {
-                  "background": "rgba(0,0,0,0)"
+                  "background": "rgba(0,0,0,0)",
+                  "color": "#ffffff"
                 }
               }
             }
@@ -663,17 +717,23 @@
           "aliasPath": "/wxgroupInfoeditGroupNotice",
           "requireAuth": true,
           "style": {
-            "navigationBarTitleText": "更改群公告", //修改备注
+            "navigationBarTitleText": "更改群公告",
+            "navigationBarBackgroundColor": "#6200ee",
+            "navigationBarTextStyle": "white",
             "app-plus": {
               "titleNView": {
+                "backgroundColor": "#6200ee",
+                "titleColor": "#ffffff",
                 "buttons": [
                   {
                     "text": "修改",
-                    "fontSize": "16px"
+                    "fontSize": "16px",
+                    "color": "#ffffff"
                   }
                 ],
                 "backButton": {
-                  "background": "rgba(0,0,0,0)"
+                  "background": "rgba(0,0,0,0)",
+                  "color": "#ffffff"
                 }
               }
             }
@@ -685,7 +745,9 @@
           "aliasPath": "/wxgroupInfoscanCodeDetail",
           "requireAuth": true,
           "style": {
-            "navigationBarTitleText": "群聊信息"
+            "navigationBarTitleText": "群聊信息",
+            "navigationBarBackgroundColor": "#6200ee",
+            "navigationBarTextStyle": "white"
           }
         },
         {
@@ -694,7 +756,9 @@
           "aliasPath": "/wxgroupInfogrouplist",
           "requireAuth": true,
           "style": {
-            "navigationBarTitleText": "群聊"
+            "navigationBarTitleText": "群聊",
+            "navigationBarBackgroundColor": "#6200ee",
+            "navigationBarTextStyle": "white"
           }
         },
         {
@@ -704,13 +768,18 @@
           "requireAuth": true,
           "style": {
             "navigationBarTitleText": "二维码名片",
+            "navigationBarBackgroundColor": "#6200ee",
+            "navigationBarTextStyle": "white",
             "app-plus": {
               "titleNView": {
+                "backgroundColor": "#6200ee",
+                "titleColor": "#ffffff",
                 "buttons": [
                   {
                     "text": "\ue623",
                     "fontSrc": "/static/wx_iconfont.ttf",
-                    "fontSize": "28px"
+                    "fontSize": "28px",
+                    "color": "#ffffff"
                   }
                 ]
               }
@@ -724,13 +793,18 @@
           "requireAuth": true,
           "style": {
             "navigationBarTitleText": "群二维码",
+            "navigationBarBackgroundColor": "#6200ee",
+            "navigationBarTextStyle": "white",
             "app-plus": {
               "titleNView": {
+                "backgroundColor": "#6200ee",
+                "titleColor": "#ffffff",
                 "buttons": [
                   {
                     "text": "\ue623",
                     "fontSrc": "/static/wx_iconfont.ttf",
-                    "fontSize": "28px"
+                    "fontSize": "28px",
+                    "color": "#ffffff"
                   }
                 ]
               }
@@ -743,7 +817,9 @@
           "aliasPath": "/wxpersonInfoedit",
           "requireAuth": true,
           "style": {
-            "navigationBarTitleText": "资料设置" //好友资料设置
+            "navigationBarTitleText": "资料设置",
+            "navigationBarBackgroundColor": "#6200ee",
+            "navigationBarTextStyle": "white"
           }
         },
         {
@@ -754,21 +830,25 @@
           "style": {
             "navigationBarTitleText": "朋友圈",
             "enablePullDownRefresh": true,
+            "navigationBarBackgroundColor": "#6200ee",
+            "navigationBarTextStyle": "white",
             "app-plus": {
               "titleNView": {
                 "type": "transparent",
-                "titleColor": "#fff",
-                "backgroundColor": "#d1d1d1",
+                "titleColor": "#ffffff",
+                "backgroundColor": "#6200ee",
                 "buttons": [
                   {
                     "text": "\ue638",
                     "fontSrc": "/static/wx_iconfont.ttf",
                     "fontSize": "24px",
-                    "background": "rgba(0,0,0,0)"
+                    "background": "rgba(0,0,0,0)",
+                    "color": "#ffffff"
                   }
                 ],
                 "backButton": {
-                  "background": "rgba(0,0,0,0)"
+                  "background": "rgba(0,0,0,0)",
+                  "color": "#ffffff"
                 }
               }
             }
@@ -782,31 +862,24 @@
           "style": {
             "navigationBarTitleText": "笔记",
             "enablePullDownRefresh": true,
+            "navigationBarBackgroundColor": "#6200ee",
+            "navigationBarTextStyle": "white",
             "app-plus": {
               "titleNView": {
-                // "type": "transparent",
-                // "titleColor": "#333333",
-                // "backgroundColor": "#09C160",
+                "backgroundColor": "#6200ee",
+                "titleColor": "#ffffff",
                 "buttons": [
                   {
-                    "color": "#09C160",
+                    "color": "#ffffff",
                     "text": "添加",
-                    // "fontSrc": "/static/wx_iconfont.ttf",
                     "fontSize": "16px",
                     "borderRadius": "0px",
-                    "background": "#09C160"
+                    "background": "#7c4dff"
                   }
-                  // {
-                  //   "color": "#09C160",
-                  //   "text": "发送",
-                  //   // "fontSrc": "/static/wx_iconfont.ttf",
-                  //   "fontSize": "16px",
-                  //   "borderRadius": "0px",
-                  //   "background": "#09C160"
-                  // }
                 ],
                 "backButton": {
-                  "background": "rgba(0,0,0,0)"
+                  "background": "rgba(0,0,0,0)",
+                  "color": "#ffffff"
                 }
               }
             }
@@ -820,23 +893,24 @@
           "style": {
             "navigationBarTitleText": "圈子",
             "enablePullDownRefresh": true,
+            "navigationBarBackgroundColor": "#6200ee",
+            "navigationBarTextStyle": "white",
             "app-plus": {
               "titleNView": {
-                // "type": "transparent",
-                // "titleColor": "#333333",
-                // "backgroundColor": "#09C160",
+                "backgroundColor": "#6200ee",
+                "titleColor": "#ffffff",
                 "buttons": [
                   {
-                    "color": "#09C160",
+                    "color": "#ffffff",
                     "text": "添加",
-                    // "fontSrc": "/static/wx_iconfont.ttf",
                     "fontSize": "16px",
                     "borderRadius": "0px",
-                    "background": "#09C160"
+                    "background": "#7c4dff"
                   }
                 ],
                 "backButton": {
-                  "background": "rgba(0,0,0,0)"
+                  "background": "rgba(0,0,0,0)",
+                  "color": "#ffffff"
                 }
               }
             }
@@ -850,23 +924,24 @@
           "style": {
             "navigationBarTitleText": "圈子动态",
             "enablePullDownRefresh": true,
+            "navigationBarBackgroundColor": "#6200ee",
+            "navigationBarTextStyle": "white",
             "app-plus": {
               "titleNView": {
-                // "type": "transparent",
-                // "titleColor": "#333333",
-                // "backgroundColor": "#09C160",
+                "backgroundColor": "#6200ee",
+                "titleColor": "#ffffff",
                 "buttons": [
                   {
-                    "color": "#09C160",
+                    "color": "#ffffff",
                     "text": "添加",
-                    // "fontSrc": "/static/wx_iconfont.ttf",
                     "fontSize": "16px",
                     "borderRadius": "0px",
-                    "background": "#09C160"
+                    "background": "#7c4dff"
                   }
                 ],
                 "backButton": {
-                  "background": "rgba(0,0,0,0)"
+                  "background": "rgba(0,0,0,0)",
+                  "color": "#ffffff"
                 }
               }
             }
@@ -880,21 +955,25 @@
           "style": {
             "navigationBarTitleText": "我的相册",
             "enablePullDownRefresh": true,
+            "navigationBarBackgroundColor": "#6200ee",
+            "navigationBarTextStyle": "white",
             "app-plus": {
               "titleNView": {
                 "type": "transparent",
-                "titleColor": "#fff",
-                "backgroundColor": "#d1d1d1",
+                "titleColor": "#ffffff",
+                "backgroundColor": "#6200ee",
                 "buttons": [
                   {
                     "text": "\ue6f4",
                     "fontSrc": "/static/wx_iconfont.ttf",
                     "fontSize": "24px",
-                    "background": "rgba(0,0,0,0)"
+                    "background": "rgba(0,0,0,0)",
+                    "color": "#ffffff"
                   }
                 ],
                 "backButton": {
-                  "background": "rgba(0,0,0,0)"
+                  "background": "rgba(0,0,0,0)",
+                  "color": "#ffffff"
                 }
               }
             }
@@ -907,23 +986,24 @@
           "requireAuth": true,
           "style": {
             "navigationBarTitleText": "发朋友圈",
+            "navigationBarBackgroundColor": "#6200ee",
+            "navigationBarTextStyle": "white",
             "app-plus": {
               "titleNView": {
-                // "type": "transparent",
-                // "titleColor": "#333333",
-                // "backgroundColor": "#09C160",
+                "backgroundColor": "#6200ee",
+                "titleColor": "#ffffff",
                 "buttons": [
                   {
-                    "color": "#09C160",
+                    "color": "#ffffff",
                     "text": "发表",
-                    // "fontSrc": "/static/wx_iconfont.ttf",
                     "fontSize": "16px",
                     "borderRadius": "0px",
-                    "background": "#09C160"
+                    "background": "#7c4dff"
                   }
                 ],
                 "backButton": {
-                  "background": "rgba(0,0,0,0)"
+                  "background": "rgba(0,0,0,0)",
+                  "color": "#ffffff"
                 }
               }
             }
@@ -936,19 +1016,24 @@
           "requireAuth": true,
           "style": {
             "navigationBarTitleText": "建议反馈",
+            "navigationBarBackgroundColor": "#6200ee",
+            "navigationBarTextStyle": "white",
             "app-plus": {
               "titleNView": {
+                "backgroundColor": "#6200ee",
+                "titleColor": "#ffffff",
                 "buttons": [
                   {
-                    "color": "#09C160",
+                    "color": "#ffffff",
                     "text": "发表",
                     "fontSize": "16px",
                     "borderRadius": "0px",
-                    "background": "#09C160"
+                    "background": "#7c4dff"
                   }
                 ],
                 "backButton": {
-                  "background": "rgba(0,0,0,0)"
+                  "background": "rgba(0,0,0,0)",
+                  "color": "#ffffff"
                 }
               }
             }
@@ -962,14 +1047,10 @@
           "style": {
             "navigationBarTitleText": "收藏",
             "enablePullDownRefresh": true,
+            "navigationBarBackgroundColor": "#6200ee",
+            "navigationBarTextStyle": "white",
             "app-plus": {
-              "titleNView": {
-                // "buttons": [{
-                // 	"text": "\ue657",
-                // 	"fontSrc": "/static/wx_iconfont.ttf",
-                // 	"fontSize": "28px"
-                // }]
-              }
+              "titleNView": {}
             }
           }
         },
@@ -980,21 +1061,24 @@
           "requireAuth": true,
           "style": {
             "navigationBarTitleText": "详情",
+            "navigationBarBackgroundColor": "#6200ee",
+            "navigationBarTextStyle": "white",
             "app-plus": {
               "titleNView": {
-                // "type": "transparent",
-                // "titleColor": "#333333",
-                // "backgroundColor": "#09C160",
+                "backgroundColor": "#6200ee",
+                "titleColor": "#ffffff",
                 "buttons": [
                   {
                     "text": "\ue623",
                     "fontSrc": "/static/wx_iconfont.ttf",
                     "fontSize": "24px",
-                    "background": "rgba(0,0,0,0)"
+                    "background": "rgba(0,0,0,0)",
+                    "color": "#ffffff"
                   }
                 ],
                 "backButton": {
-                  "background": "rgba(0,0,0,0)"
+                  "background": "rgba(0,0,0,0)",
+                  "color": "#ffffff"
                 }
               }
             }
@@ -1006,7 +1090,9 @@
           "aliasPath": "/wxNodesCreate",
           "requireAuth": true,
           "style": {
-            "navigationBarTitleText": "创建笔记"
+            "navigationBarTitleText": "创建笔记",
+            "navigationBarBackgroundColor": "#6200ee",
+            "navigationBarTextStyle": "white"
           }
         },
         {
@@ -1015,7 +1101,9 @@
           "aliasPath": "/wxNodesPreview",
           "requireAuth": true,
           "style": {
-            "navigationBarTitleText": "预览笔记"
+            "navigationBarTitleText": "预览笔记",
+            "navigationBarBackgroundColor": "#6200ee",
+            "navigationBarTextStyle": "white"
           }
         },
         {
@@ -1024,7 +1112,9 @@
           "aliasPath": "/wxCirclesCreate",
           "requireAuth": true,
           "style": {
-            "navigationBarTitleText": "创建圈子"
+            "navigationBarTitleText": "创建圈子",
+            "navigationBarBackgroundColor": "#6200ee",
+            "navigationBarTextStyle": "white"
           }
         },
         {
@@ -1033,7 +1123,9 @@
           "aliasPath": "/wxCirclesDynamicCreate",
           "requireAuth": true,
           "style": {
-            "navigationBarTitleText": "创建圈子动态"
+            "navigationBarTitleText": "创建圈子动态",
+            "navigationBarBackgroundColor": "#6200ee",
+            "navigationBarTextStyle": "white"
           }
         }
       ]
@@ -1048,7 +1140,9 @@
           "requireAuth": false,
           "style": {
             "navigationBarTitleText": "登录",
-            "navigationStyle": "custom"
+            "navigationStyle": "custom",
+            "navigationBarBackgroundColor": "#6200ee",
+            "navigationBarTextStyle": "white"
           }
         }
       ]
