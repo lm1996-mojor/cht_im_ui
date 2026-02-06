@@ -31,6 +31,7 @@
             @longpressItem="longpressItem"
             :longTapItemKey="longTapItemKey"
             :refresh="getChatList"
+            @action="actionsClick"
           >
           </chatItem>
         </view>
@@ -414,6 +415,22 @@ export default {
     }
   },
   methods: {
+    actionsClick(e,msg) {
+      switch (e.dataType) {
+        case 'user':
+          this.sendMsg(e.data, 7)
+          break
+        case 'video':
+          this.sendMsg(e.content, e.type)
+          break
+        case 'location':
+          this.sendMsg(e.content, e.type)
+          break
+        default:
+          break
+      }
+      // this.sendMsg(e.content, e.type)
+    },
     readed() {
       this.$http.request({
         url: '/chat_im/conversations/read',
@@ -848,9 +865,15 @@ export default {
           break
       }
     },
-    sendMsg(e, msgType) {
-      if (!e) {
+    sendMsg(msg, msgType) {
+      let e=''
+      if (!msg) {
         return
+      }
+      if(typeof msg === 'string'){
+        e=msg
+      }else{
+        e=JSON.stringify(msg)
       }
       var userInfo = uni.getStorageSync('userInfo')
       // this.$fc.pushOutMsg({

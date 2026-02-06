@@ -77,6 +77,7 @@
               v-if="item.messageType == 6"
               :data="JSON.parse(JSON.parse(item.content).noteDetail)"
               @click="previewNote(item)"
+              @action="actionsClick"
             ></note-item>
             <view
               v-if="item.messageType == 'VOICE'"
@@ -147,7 +148,7 @@
             </view>
             <view
               class="zfb-tk-item-c-CARD"
-              v-if="item.messageType == 'CARD'"
+              v-if="item.messageType == '7'"
               @click="goAddfriend(returnParse(item.content))"
             >
               <view class="zfb-tk-item-c-CARD-top">
@@ -158,10 +159,10 @@
                 ></image>
                 <view class="zfb-tk-item-c-CARD-top-content">
                   <view class="zfb-tk-item-c-CARD-title">{{
-                    returnParse(item.content).name
+                    returnParse(item.content).nickname
                   }}</view>
                   <view class="zfb-tk-item-c-CARD-no">{{
-                    returnParse(item.content).chatNo
+                    returnParse(item.content).account
                   }}</view>
                 </view>
               </view>
@@ -190,7 +191,7 @@ const TUICalling = uni.requireNativePlugin(
 // #endif
 import openTool from './openTool.vue'
 export default {
-  emits: ['tryagin', 'longpressItem'],
+  emits: ['tryagin', 'longpressItem', 'action'],
   name: 'chat-item',
   components: {
     openTool
@@ -236,6 +237,10 @@ export default {
     }
   },
   methods: {
+    actionsClick(e,type) {
+      this.$emit('action', e,type)
+      
+    },
     previewNote(e) {
       uni.navigateTo({
         url: '../notes/preview?noteId=' + this.returnParse(e.content).noteId

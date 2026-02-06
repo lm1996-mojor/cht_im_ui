@@ -1,139 +1,165 @@
 <template>
-	<!-- <uni-card> -->
-	<uni-card :title="noteData?.titleItem?.content" :sub-title="noteData?.textItem?.content" extra=""
-		:thumbnail="noteData?.imgItem?.content" @click="onClick"
-		margin="0">
-		<view slot="actions" class="card-actions">
-					<view class="card-actions-item" @click="actionsClick('位置')">
-						<uni-icons type="location-filled" size="18" color="#999"></uni-icons>
-						<text class="card-actions-item-text">位置</text>
-					</view>
-					<view class="card-actions-item" @click="actionsClick('视频')">
-						<uni-icons type="videocam-filled" size="18" color="#999"></uni-icons>
-						<text class="card-actions-item-text">视频</text>
-					</view>
-					<view class="card-actions-item" @click="actionsClick('名片')">
-						<uni-icons type="person-filled" size="18" color="#999"></uni-icons>
-						<text class="card-actions-item-text">名片</text>
-					</view>
-				</view>
-		<text class="tag">笔记</text>
-	</uni-card>
-
-	<!-- <view class="note-card-title">
-      <user-avatar
-        v-if="noteData?.imgItem?.content"
-        :modelValue="noteData?.imgItem?.content"
-      ></user-avatar>
-      <view class="note-box">
-        <text class="note-title">{{ noteData?.titleItem?.content }}</text>
-        <text class="note-content" v-if="noteData?.textItem?.content">{{
-          noteData?.textItem?.content
-        }}</text>
+  <uni-card 
+    :title="noteData?.titleItem?.content" 
+    :sub-title="noteData?.textItem?.content" 
+    extra=""
+    :thumbnail="noteData?.imgItem?.content" 
+    @click="onClick"
+    margin="0"
+  >
+    <view slot="actions" class="card-actions">
+		<view v-for="item in noteData.list" class="card-actions-item" @click.stop="actionsClick(item,'location')">
+        <!-- <uni-icons :type="item.icon" size="18" color="#999"></uni-icons> -->
+        <text class="card-actions-item-text">{{getActionText(item)}}</text>
       </view>
-    </view> -->
-	<!-- <text class="tag">笔记</text> -->
-	<!-- </uni-card> -->
+    </view>
+    <text class="tag">笔记</text>
+  </uni-card>
 </template>
 
-<script>
-	export default {
-		props: {
-			data: {
-				type: Array,
-				required: true,
-				default: () => []
-			}
-		},
-		methods: {
-			// 关闭预览（向父组件发送事件）
-			handleClose() {
-				this.$emit('close')
-			}
-		},
-		computed: {
-			noteData() {
-				const imgItem = this?.data?.find(item => item.dataType === 'image')
-				const titleItem = this?.data?.find(item => item.dataType === 'title')
-				const textItem = this?.data?.find(item => item.dataType === 'text')
-				return {
-					imgItem,
-					titleItem,
-					textItem
-				}
-			}
-		}
-	}
+<script setup>
+// 1. 导入需要的API和函数
+import { computed } from 'vue'
+import { getNoteLocation, getNoteVideo, getNoteCard, getItemByType } from '@/common/note.ts'
+
+// 2. 定义组件props（Vue3的defineProps语法）
+const props = defineProps({
+  data: {
+    type: Array,
+    required: true,
+    default: () => []
+  }
+})
+
+// 3. 定义组件emit事件（Vue3的defineEmits语法）
+const emit = defineEmits(['close', 'action'])
+
+// 4. 定义方法（替代Vue2的methods）
+// 关闭预览
+const handleClose = () => {
+  emit('close')
+}
+
+// 点击操作项
+const actionsClick = (action) => {
+  emit('action', action)
+}
+
+// 卡片点击事件（补充Vue2中缺失的实现）
+const onClick = () => {
+  console.log('卡片被点击', noteData.value)
+  // 可根据需求扩展逻辑，比如emit自定义事件
+}
+
+// 5. 计算属性（替代Vue2的computed）
+const noteData = computed(() => {
+  const imgItem = getItemByType(props.data, 'image')
+  const titleItem = getItemByType(props.data, 'title')
+  const textItem = getItemByType(props.data, 'text')
+  return {
+    imgItem,
+    titleItem,
+    textItem,
+	// 位置、视频、名片等子项
+	list:getSubItems(props.data)
+  }
+})
+const getSubItems = (data)=>{
+	const locationItem = getItemByType(data, 'location')
+	const videoItem = getItemByType(data, 'video')
+	const userItem = getItemByType(data, 'user')
+	return [
+		locationItem,
+		videoItem,
+		userItem
+	].filter(item => item)		
+}
+const getActionText = (item) => {
+  if (item.dataType === 'location') {
+    return '位置'
+  } else if (item.dataType === 'video') {
+    return '视频'
+  } else if (item.dataType === 'user') {
+    return '名片'
+  }
+  return item.content
+}
 </script>
 
 <style scoped lang="scss">
-	// 外层容器：添加整体内边距，避免内容贴边
-	.note-content-wrap {
-		padding: 16rpx;
-		display: flex;
-		flex-direction: column;
-		gap: 12rpx;
-	}
+// 保留原有样式，仅补充缺失的子项样式
+.note-content-wrap {
+  padding: 16rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 12rpx;
+}
 
-	// 头像+标题容器：添加内部间距，清理冗余嵌套
-	.note-card-title {
-		display: flex;
-		align-items: flex-start; // 改为顶部对齐，更贴合上下排列的标题+内容布局
-		gap: 12rpx;
-	}
+.note-card-title {
+  display: flex;
+  align-items: flex-start;
+  gap: 12rpx;
+}
 
-	// 标题+内容容器：核心！限制最大宽度，触发省略效果
-	.note-box {
-		flex: 1; // 占满剩余宽度，适配不同屏幕
-		max-width: 550rpx; // 移动端合理最大宽度，避免过宽
-		display: flex;
-		flex-direction: column;
-		gap: 8rpx; // 标题与内容之间的间距，避免拥挤
-	}
+.note-box {
+  flex: 1;
+  max-width: 550rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+}
 
-	// 笔记标题：单行超出省略
-	.note-title {
-		font-size: 32rpx;
-		color: #333333;
-		line-height: 1.4;
-		// 单行省略核心样式
-		white-space: nowrap;
-		overflow: hidden;
-		text-overflow: ellipsis;
-		display: block; // 转为块元素，更好地触发宽度限制
-	}
+.note-title {
+  font-size: 32rpx;
+  color: #333333;
+  line-height: 1.4;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+}
 
-	// 笔记内容：省略效果（默认单行，可选多行）
-	.note-content {
-		font-size: 28rpx; // 比标题小，区分层级
-		color: #666666; // 比标题浅，视觉更柔和
-		line-height: 1.4;
-		// 方案1：单行超出省略（默认）
-		white-space: nowrap;
-		overflow: hidden;
-		text-overflow: ellipsis;
-		display: block;
+.note-content {
+  font-size: 28rpx;
+  color: #666666;
+  line-height: 1.4;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+  /* 多行省略备用方案
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  */
+}
 
-		// 方案2：多行超出省略（推荐，注释掉方案1，启用此方案即可，可修改-webkit-line-clamp控制行数）
-		// display: -webkit-box;
-		// -webkit-box-orient: vertical;
-		// -webkit-line-clamp: 2; // 最多显示2行，超出省略
-		// overflow: hidden;
-		// text-overflow: ellipsis;
-	}
+.tag {
+  font-size: 20rpx;
+  color: #888888;
+  padding: 4rpx 10rpx;
+  background-color: #f5f7fa;
+  border-radius: 8rpx;
+  width: fit-content;
+}
 
-	// 笔记标签：核心优化（更小、更柔和）
-	.tag {
-		font-size: 20rpx;
-		color: #888888;
-		padding: 4rpx 10rpx;
-		background-color: #f5f7fa;
-		border-radius: 8rpx;
-		width: fit-content;
-	}
-	.card-actions{
-		display:flex;
-		justify-content: space-between;
+.card-actions {
+  display: flex;
+  justify-content: space-between;
+}
 
-	}
+// 补充子项样式，让图标+文字排版更美观
+.card-actions-item {
+  display: flex;
+  align-items: center;
+  gap: 4rpx;
+  font-size: 24rpx;
+}
+
+.card-actions-item-text {
+  margin-left: 4px;
+  color: #999;
+}
 </style>

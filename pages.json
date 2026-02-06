@@ -50,13 +50,13 @@
       "text": "通讯录"
     },
     {
-      "pagePath": "wx/tabbar5/index",
+      "pagePath": "wx/tabbar3/index",
       "iconPath": "static/wx/n02.png",
       "selectedIconPath": "static/wx/n02_on.png",
       "text": "圈子"
     },
     {
-      "pagePath": "wx/tabbar3/index",
+      "pagePath": "wx/tabbar4/index",
       "iconPath": "static/wx/n03.png",
       "selectedIconPath": "static/wx/n03_on.png",
       "text": "我"
@@ -157,9 +157,9 @@
           }
         },
         {
-          "path": "tabbar5/index",
-          "name": "wxtabbar5",
-          "aliasPath": "/wxtabbar5",
+          "path": "tabbar3/index",
+          "name": "wxtabbar3",
+          "aliasPath": "/wxtabbar3",
           "requireAuth": true,
           "style": {
             "navigationBarTitleText": "圈子广场",
@@ -223,9 +223,9 @@
           }
         },
         {
-          "path": "tabbar3/index",
-          "name": "wxtabbar3",
-          "aliasPath": "/wxtabbar3",
+          "path": "tabbar4/index",
+          "name": "wxtabbar4",
+          "aliasPath": "/wxtabbar4",
           "requireAuth": true,
           "style": {
             "navigationStyle": "custom",
@@ -235,12 +235,12 @@
           }
         },
         {
-          "path": "tabbar4/index",
-          "name": "wxtabbar4",
-          "aliasPath": "/wxtabbar4",
+          "path": "tabbar5/index",
+          "name": "wxtabbar5",
+          "aliasPath": "/wxtabbar5",
           "requireAuth": true,
           "style": {
-            "navigationBarTitleText": "我",
+            "navigationBarTitleText": "设置",
             "navigationBarBackgroundColor": "#6200ee",
             "navigationBarTextStyle": "white"
           }
